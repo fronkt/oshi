@@ -42,9 +42,9 @@ activity is *the* make-or-break risk. The whole v0 design is engineered around i
 | Risk | How v0 attacks it |
 |------|-------------------|
 | **Signal sparsity** (no "now playing") | The **one-tap Logger widget manufactures the signal** — frictionless home-screen logging generates the activity the social feed consumes. |
-| **Cold start** (empty feed kills social apps) | **Open feed**: AniList following-activity is *public*, so we mirror everyone you already follow → full feed minute one, before any friend installs Oshi. Plus the Logger is useful *solo*. |
+| **Cold start** (empty feed kills social apps) | **Open feed**: AniList following-activity is *public*, so we surface everyone you already follow → full feed minute one, before any friend installs Oshi. Plus the Logger is useful *solo*. |
 | **Retention** | Daily logging habit + ambient friend presence on the home screen. |
-| **Dependency on AniList** (free, degraded 30/min, ToS) | Mirror everything into our own DB; treat AniList as an *import source* not a live dependency; multi-source-ready (MAL next). |
+| **Dependency on AniList** (free, degraded 30/min, ToS forbids hoarding) | **Cache, don't mirror** — short-TTL serving cache only (ToS bans data hoarding); per-user-token reads; multi-source-ready. *(MAL is a roadmapped 2nd source — its API has no social feed, so AniList is the v0 foundation.)* |
 
 ---
 
@@ -59,16 +59,19 @@ activity is *the* make-or-break risk. The whole v0 design is engineered around i
 | 5 | **Compat score** | **Niche-weighted blend** (overlap + taste-vector cosine + score-correlation) + a human "why" line; tone-engine-upgradeable |
 | 6 | **Reactions** | **Sticker system** — *user-imported* (UGC/host model, à la Discord); small original default pack free |
 | 7 | **Invite loop** | Gate **custom-sticker importing + full weekly recap**; *core value stays free*; non-user compat = natural invite trigger |
+| 8 | **Platform source** | **AniList-first** (only API with a friend-activity feed); MAL roadmapped as a 2nd source (v1.5+) for logging + identity, **not v0** |
 
 ### Defaulted plumbing (redline-able)
-- **Data/sync:** Supabase Postgres mirror; the server fetches each user's following-feed with
-  **that user's own token** (so the 30/min cap is per-user, not global); refresh on app-open + a
-  background tick. Backoff on 429 via `Retry-After`.
+- **Data/sync (cache-not-mirror):** persist only Oshi-native data; AniList content lives in a
+  **short-TTL serving cache** (ToS forbids mirroring/hoarding). The server fetches each user's
+  following-feed with **that user's own token** (so the 30/min cap is per-user, not global); refresh
+  on app-open + a background tick. Backoff on 429 via `Retry-After`.
+- **Backend:** **Supabase Edge Functions (Deno)** — token custody co-located with the encrypted DB.
 - **Token custody:** store AniList tokens **server-side, encrypted at rest**; the device/widget
   holds only an *Oshi* session token. One-tap writes go **device → Oshi API → AniList**, so
   full-access AniList tokens never live on the device or reach the client.
-- **Onboarding:** AniList OAuth (implicit grant via in-app browser) → import follows + public
-  activity → instant populated feed → prompt to add the widget → optional invite.
+- **Onboarding:** AniList OAuth (**authorization-code grant**; server holds the token) via in-app
+  browser → load follows + public activity → instant populated feed → prompt to add the widget → optional invite.
 - **Recap:** weekly auto-generated shareable image (chapters/episodes logged, top genre, your
   highest compat match of the week, one flex stat); one-tap share to IG story / Discord.
 
@@ -86,18 +89,18 @@ activity is *the* make-or-break risk. The whole v0 design is engineered around i
 └───────────────┬─────────────────────────────────────────────┘
                 │  HTTPS (Oshi session token)
 ┌───────────────▼─────────────────────────────────────────────┐
-│  Oshi backend  (Next.js API routes / edge fns on Supabase)   │
+│  Oshi backend  (Supabase Edge Functions · Deno)             │
 │   • Holds AniList tokens (encrypted at rest)                 │
-│   • Mirror: pull following-activity per user (their token)   │
-│   • Write path: Logger tap → SaveMediaListEntry → mirror     │
+│   • Cache (short TTL): following-activity per user (token)   │
+│   • Write path: Logger tap → SaveMediaListEntry → cache      │
 │   • Compat engine (niche-weighted blend)                    │
 │   • Reactions / invites / recap generation                  │
 └───────────────┬─────────────────────────────────────────────┘
                 │
         ┌───────▼────────┐        ┌──────────────────────────┐
         │ Supabase       │        │ AniList GraphQL          │
-        │ (mirror + app  │        │ graphql.anilist.co       │
-        │  state)        │        │ • Page.activities(       │
+        │ (app state +   │        │ graphql.anilist.co       │
+        │  TTL cache)    │        │ • Page.activities(       │
         └────────────────┘        │     isFollowing:true)    │
                                   │ • SaveMediaListEntry      │
                                   │ • 30 req/min (degraded)   │
@@ -115,15 +118,20 @@ activity is *the* make-or-break risk. The whole v0 design is engineered around i
 
 ## 5. Data model (Supabase) — sketch
 
-- `users` — oshi user id, anilist_id, anilist_name, avatar, **anilist_token_enc**, oshi_session, created_at
-- `follows` — (user_id → anilist_id) edges imported from AniList; `is_oshi_user` flag
-- `activity` — mirrored events: anilist_user_id, media_id, type (started/progress/completed/rated), progress, score, created_at  *(dedup on (anilist_user_id, media_id, progress))*
-- `media` — cached AniList media: id, titles, cover_url, genres, tags, format, avg_score, popularity, is_adult
+**Persisted (Oshi-native):**
+- `users` — oshi user id, anilist_id, anilist_name, avatar, **anilist_token_enc**, created_at
+- `oshi_sessions` — device session tokens (the *only* token the app/widget holds)
+- `follows` — Oshi-native follow edges (seeded from AniList follows); `is_oshi_user` flag
 - `reactions` — from_user, target_activity (or target_anilist_user for pending), sticker_id, **pending** bool, created_at
-- `stickers` / `sticker_packs` — original-art packs; `is_default` / invite-gated
-- `compat` — cached pair scores: user_a, user_b, score, why_json, computed_at
+- `sticker_packs` / `stickers` — packs; `is_default`; user-imported (UGC) vs default
+- `compat_cache` — pair scores: user_a, user_b, score, why_json, computed_at
 - `invites` — inviter, code, invitee_anilist_id?, redeemed_at
 - `recaps` — user_id, week, stats_json, image_url, unlocked bool
+
+**Cache (short-TTL, NOT a mirror — ToS forbids hoarding):**
+- `anilist_cache` — key, payload jsonb, fetched_at, **expires_at**. AniList content (activity, media)
+  is fetched live per user with their token and cached *only* to respect the rate limit; evicted on
+  expiry. **No permanent `activity`/`media` warehouse.**
 
 ---
 
@@ -171,14 +179,20 @@ activity is *the* make-or-break risk. The whole v0 design is engineered around i
 - **No content, ever.** Metadata + activity + recommendations only. Link only to legal sources
   (AniList, official publishers). Never scanlation sites.
 - **Respect AniList.** 30 req/min; per-user-token reads to distribute the cap; backoff on 429.
-  Mirror data so we're not a live dependency. Never spam non-users via the AniList API.
-- **Multi-source ready.** Abstract the catalog/activity source so MAL can be added later.
+  **Cache, never mirror/hoard** (ToS). Never spam non-users via the AniList API. Free under
+  **$150/mo revenue**; above that, get a commercial license (`contact@anilist.co`). Email AniList to
+  authorize Oshi under the **tracker-clause exception** (complementary sync, not a competing tracker).
+- **Multi-source ready.** Source-abstract the activity/catalog layer. **AniList-first** (only API
+  with a friend-activity feed); **MAL is a roadmapped 2nd source** (v1.5+) for logging + identity —
+  its API supports writes + OAuth but has no social graph, so MAL users get an Oshi-native follow graph.
 
 ---
 
 ## 9. Build phases
 
-- **Phase 0 — Scaffold.** Expo app + TS, Supabase project, AniList GraphQL client, env/secrets.
+- **Phase 0 — Scaffold.** Expo app (TS, CNG/dev-build) + **EAS builds (iOS+Android)** + a
+  **placeholder-widget de-risk spike** + Supabase project & **cache-not-mirror schema** + AniList
+  client + secrets. Detailed plan: [`docs/PHASE0_PLAN.md`](./docs/PHASE0_PLAN.md).
 - **Phase 1 — Auth + import + feed.** OAuth, mirror follows+activity, render open feed.
 - **Phase 2 — Logger widget + writes.** Interactive widget, `SaveMediaListEntry`, undo log.
 - **Phase 3 — Compat + stickers.** Blend score + why-line; sticker reactions + pending/invite.
@@ -191,9 +205,12 @@ activity is *the* make-or-break risk. The whole v0 design is engineered around i
 
 ## 10. Open items (to resolve before / during build)
 
-- [ ] **AniList ToS** — confirm commercial social use on top of their API is permitted.
-- [ ] **Grant type final call** — implicit (device) vs authorization-code (server) given we want the
-      token server-side for mirroring + writes. Leaning auth-code so the server is the token holder.
+- [x] **AniList ToS — verified.** Commercial OK under **$150/mo** (license above); **no data
+      hoarding** → cache-not-mirror; **tracker-clause exception** → email `contact@anilist.co` to
+      authorize Oshi as complementary sync.
+- [x] **Grant type — resolved: authorization-code** (server holds the token for reads + writes).
+- [ ] **Token-encryption mechanism** — Supabase Vault/pgsodium vs app-level AES in the edge fn.
+- [ ] **AniList app registration** — client id/secret + redirect-URI scheme (`oshi://` vs https).
 - [ ] **Recap card visual design** — layout, brand, share targets.
 - [ ] **Sticker model hygiene** — user-import flow (UGC); small original *default* pack; register a
       DMCA agent + notice-and-takedown + repeat-infringer policy to keep safe-harbor protection.
