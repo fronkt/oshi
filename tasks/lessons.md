@@ -50,3 +50,20 @@ here (`gradio=none` → `invoke` blocked) and image→3D spaces (TRELLIS/Hunyuan
 `view_parameters`). So no AI render and no AI 3D model in this environment. The right move was a **procedural
 Three.js** bonsai (no asset needed) plus **real data** (AniList cover art fetched via the public API) instead
 of AI-generated imagery. Always confirm a generation tool actually runs before designing around it.
+
+## 2026-06-30 — Real-time WebGL ≠ photoreal; pre-render frames for "Apple-style" 3D
+**Correction:** The procedural Three.js bonsai was rejected — "absolutely terrible, no realism." I'd
+conflated "scroll-driven 3D" (the Apple feel) with "real-time WebGL geometry" (which is flat/clay without
+heavy texturing the browser can't afford).
+
+**Pattern:** Apple's product-rotation heroes are **not** live WebGL — they're **pre-rendered image
+sequences** (offline path-traced frames) scrubbed against scroll progress on a `<canvas>`. When the user
+wants photoreal + scroll-animated 3D, the answer is an **offline render → frame sequence → scroll-scrub**,
+not R3F. Here that meant a headless **Blender Cycles** turntable (`scripts/bonsai.py`, OPTIX GPU) → 36
+WebP+alpha frames → `bonsai-sequence.tsx` (preload, draw frame at `useScroll` progress; reduced-motion =
+static frame). Use a **render-and-verify loop**: render headless → Read the PNG → iterate, so you never
+tune visuals blind.
+
+**How to apply:** "Apple-style scrolling 3D" → reach for a pre-rendered frame sequence first; only use
+live WebGL when interactivity (free orbit, real-time input) is actually required. Match the still the user
+approved (settings/density) when batch-rendering the motion frames.

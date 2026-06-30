@@ -33,7 +33,8 @@ Source of truth for scope: [`SPEC.md`](../SPEC.md). Decisions locked via grillin
 ## Web — pre-launch landing (`web/`, Next.js 16) ✅
 Built before the apps to validate demand with zero paid accounts. Deploys to Vercel.
 - [x] Next 16 + Tailwind v4 + Motion, dark-locked, single rose/penlight accent (taste skill, dials 7/6/3)
-- [x] **Premium rebuild** (commit bc1d83a): procedural **Three.js bonsai** hero (scroll-driven, R3F + drei + postprocessing), real **AniList cover showcase** (GSAP horizontal pan), blur-up reveals, glass-pill nav, button-in-button CTAs — applied `3d-web-experience` / `scroll-experience` / `high-end-visual-design`. (HF AI image/3D gen disabled in env → procedural + real data.)
+- [x] **Premium rebuild** (commit bc1d83a): real **AniList cover showcase** (GSAP horizontal pan), blur-up reveals, glass-pill nav, button-in-button CTAs — applied `3d-web-experience` / `scroll-experience` / `high-end-visual-design`. (HF AI image/3D gen disabled in env → real data.)
+- [x] **Bonsai hero → Blender, not WebGL** (commit d1049af): the procedural Three.js bonsai read flat/unreal, so replaced it with the Apple technique — a 36-frame **Blender Cycles** turntable (`web/scripts/bonsai.py`) scrubbed on hero scroll via a `<canvas>` sequence (`web/components/bonsai-sequence.tsx`); removed three/R3F/drei/postprocessing. `next build` green, frames serve 200 webp, waitlist 200/400 ok. Stylized-premium (not photoreal); user signed off "wire it in as-is".
 - [x] Sections: hero (live phone mock) · syncs-with strip · feature bento · compatibility ring · how-it-works · FAQ · CTA band
 - [x] Waitlist API `web/app/api/waitlist` → Supabase `waitlist` table (`0002_waitlist.sql`), graceful no-env fallback
 - [x] `next build` green; runtime smoke (200 + API ok); zero em-dashes, eyebrow budget respected
