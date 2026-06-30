@@ -1,6 +1,7 @@
 import { SiteNav } from "@/components/site-nav";
 import { Hero } from "@/components/hero";
 import { SyncStrip } from "@/components/sync-strip";
+import { AnimeShowcase } from "@/components/anime-showcase";
 import { FeaturesBento } from "@/components/features-bento";
 import { Compatibility } from "@/components/compatibility";
 import { HowItWorks } from "@/components/how-it-works";
@@ -15,6 +16,7 @@ export default function Page() {
       <main>
         <Hero />
         <SyncStrip />
+        <AnimeShowcase />
         <FeaturesBento />
         <Compatibility />
         <HowItWorks />

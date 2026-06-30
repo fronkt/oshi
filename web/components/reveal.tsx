@@ -3,11 +3,11 @@
 import { motion, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
 
-/** Scroll-into-view reveal. Motivated: sequences content as it enters. */
+/** Premium blur-up reveal (high-end-visual-design): heavy fade + lift + deblur. */
 export function Reveal({
   children,
   delay = 0,
-  y = 20,
+  y = 24,
   className,
 }: {
   children: ReactNode;
@@ -19,10 +19,10 @@ export function Reveal({
   return (
     <motion.div
       className={className}
-      initial={reduce ? false : { opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduce ? false : { opacity: 0, y, filter: "blur(8px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.9, delay, ease: [0.32, 0.72, 0, 1] }}
     >
       {children}
     </motion.div>

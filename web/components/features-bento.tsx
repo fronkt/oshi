@@ -23,7 +23,7 @@ export function FeaturesBento() {
       <div className="mt-12 grid auto-rows-[minmax(0,1fr)] grid-cols-1 gap-4 md:grid-cols-6">
         {/* Feed — large, with visual */}
         <Reveal className="md:col-span-4 md:row-span-2">
-          <article className="relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-white/8 bg-surface p-7">
+          <article className="relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-white/8 bg-surface p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:border-white/15">
             <div className="pointer-events-none absolute -right-10 -top-10 size-60 bloom-accent opacity-80" />
             <Icon>
               <UsersThree size={20} weight="bold" />
@@ -98,7 +98,7 @@ export function FeaturesBento() {
 
         {/* Recap — gradient visual */}
         <Reveal delay={0.12} className="md:col-span-3">
-          <article className="relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-white/8 bg-surface p-7">
+          <article className="relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-white/8 bg-surface p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:border-white/15">
             <Icon>
               <CalendarBlank size={20} weight="bold" />
             </Icon>
@@ -141,7 +141,7 @@ function FeatureCard({
   body: string;
 }) {
   return (
-    <article className="flex h-full flex-col rounded-[var(--radius-card)] border border-white/8 bg-surface p-7">
+    <article className="flex h-full flex-col rounded-[var(--radius-card)] border border-white/8 bg-surface p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:border-white/15">
       <Icon>{icon}</Icon>
       <h3 className="mt-5 font-display text-lg font-semibold">{title}</h3>
       <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{body}</p>

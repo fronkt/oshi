@@ -14,8 +14,8 @@ export function SiteNav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/8 bg-ink/70 backdrop-blur-xl">
-      <nav className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-5 sm:px-8">
+    <header className="fixed inset-x-0 top-0 z-50 px-4">
+      <nav className="mx-auto mt-4 flex h-14 max-w-[1080px] items-center justify-between rounded-full border border-white/10 bg-ink/55 pl-5 pr-2 backdrop-blur-xl">
         <a href="#top" className="flex items-center gap-2.5" aria-label="Oshi home">
           <span className="grid size-7 place-items-center rounded-lg bg-accent text-ink">
             <span className="font-jp text-[15px] font-bold leading-none">推</span>
@@ -28,17 +28,17 @@ export function SiteNav() {
             <a
               key={l.href}
               href={l.href}
-              className="text-sm text-muted transition-colors hover:text-paper"
+              className="text-sm text-muted transition-colors duration-300 hover:text-paper"
             >
               {l.label}
             </a>
           ))}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <a
             href="#waitlist"
-            className="hidden rounded-full bg-paper px-4 py-2 text-sm font-semibold text-ink transition active:translate-y-px hover:bg-white sm:inline-block"
+            className="hidden rounded-full bg-paper px-4 py-2 text-sm font-semibold text-ink transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white active:scale-[0.98] sm:inline-block"
           >
             Get early access
           </a>
@@ -47,7 +47,7 @@ export function SiteNav() {
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
-            className="grid size-9 place-items-center rounded-lg text-paper md:hidden"
+            className="grid size-10 place-items-center rounded-full text-paper md:hidden"
           >
             {open ? <X size={20} weight="bold" /> : <List size={20} weight="bold" />}
           </button>
@@ -55,14 +55,14 @@ export function SiteNav() {
       </nav>
 
       {open && (
-        <div className="border-t border-white/8 bg-ink/95 px-5 py-4 md:hidden">
+        <div className="mx-auto mt-2 max-w-[1080px] rounded-3xl border border-white/10 bg-ink/90 p-3 backdrop-blur-xl md:hidden">
           <div className="flex flex-col gap-1">
             {LINKS.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-2 py-2.5 text-[15px] text-muted transition-colors hover:bg-white/5 hover:text-paper"
+                className="rounded-2xl px-3 py-3 text-[15px] text-muted transition-colors hover:bg-white/5 hover:text-paper"
               >
                 {l.label}
               </a>
@@ -70,7 +70,7 @@ export function SiteNav() {
             <a
               href="#waitlist"
               onClick={() => setOpen(false)}
-              className="mt-2 rounded-full bg-paper px-4 py-2.5 text-center text-sm font-semibold text-ink"
+              className="mt-1 rounded-full bg-paper px-4 py-3 text-center text-sm font-semibold text-ink"
             >
               Get early access
             </a>

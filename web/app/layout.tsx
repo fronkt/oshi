@@ -45,7 +45,10 @@ export default function RootLayout({
       lang="en"
       className={`${geist.variable} ${geistMono.variable} ${bricolage.variable} ${notoJP.variable} antialiased`}
     >
-      <body className="min-h-[100dvh] bg-ink text-paper">{children}</body>
+      <body className="min-h-[100dvh] bg-ink text-paper">
+        <div className="grain" aria-hidden />
+        {children}
+      </body>
     </html>
   );
 }

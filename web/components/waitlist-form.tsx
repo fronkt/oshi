@@ -49,13 +49,13 @@ export function WaitlistForm({
     return (
       <div
         className={cn(
-          "flex items-center gap-3 rounded-[var(--radius-input)] border border-accent/30 bg-accent/10 px-4 py-3.5",
+          "flex items-center gap-3 rounded-full border border-accent/30 bg-accent/10 p-2 pr-5",
           className,
         )}
         role="status"
       >
-        <span className="grid size-7 shrink-0 place-items-center rounded-full bg-accent text-ink">
-          <Check size={16} weight="bold" />
+        <span className="grid size-9 shrink-0 place-items-center rounded-full bg-accent text-ink">
+          <Check size={17} weight="bold" />
         </span>
         <p className="text-sm text-paper">
           You are on the list. We will email your invite when your spot opens.
@@ -66,48 +66,44 @@ export function WaitlistForm({
 
   return (
     <form onSubmit={onSubmit} className={cn("w-full", className)} noValidate>
-      <div className="flex flex-col gap-2.5 sm:flex-row">
-        <div className="flex-1">
-          <label htmlFor={`email-${source}`} className="sr-only">
-            Email address
-          </label>
-          <input
-            id={`email-${source}`}
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              if (state === "error") setState("idle");
-            }}
-            required
-            aria-invalid={state === "error"}
-            className="w-full rounded-[var(--radius-input)] border border-white/12 bg-surface px-4 py-3.5 text-[15px] text-paper placeholder:text-muted outline-none transition focus:border-accent/60 focus:ring-2 focus:ring-accent/25"
-          />
-        </div>
+      {/* double-bezel pill: input + button-in-button live in one machined shell */}
+      <div className="flex items-center gap-2 rounded-full border border-white/10 bg-surface/70 p-1.5 backdrop-blur-md transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] focus-within:border-accent/50 focus-within:ring-2 focus-within:ring-accent/15">
+        <label htmlFor={`email-${source}`} className="sr-only">
+          Email address
+        </label>
+        <input
+          id={`email-${source}`}
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          placeholder="you@example.com"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (state === "error") setState("idle");
+          }}
+          required
+          aria-invalid={state === "error"}
+          className="min-w-0 flex-1 bg-transparent px-4 py-2 text-[15px] text-paper outline-none placeholder:text-muted"
+        />
         <button
           type="submit"
           disabled={state === "loading"}
-          className="group inline-flex items-center justify-center gap-2 rounded-full bg-accent px-5 py-3.5 text-[15px] font-semibold text-ink transition active:translate-y-px disabled:opacity-70 hover:bg-accent-soft"
+          className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-accent py-2 pl-4 pr-2 text-[14px] font-semibold text-ink transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-accent-soft active:scale-[0.98] disabled:opacity-70"
         >
-          {state === "loading" ? (
-            <CircleNotch size={18} weight="bold" className="animate-spin" />
-          ) : (
-            <>
-              Get early access
-              <ArrowRight
-                size={17}
-                weight="bold"
-                className="transition-transform group-hover:translate-x-0.5"
-              />
-            </>
-          )}
+          <span className="hidden sm:inline">Get early access</span>
+          <span className="sm:hidden">Join</span>
+          <span className="grid size-7 place-items-center rounded-full bg-ink/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-px">
+            {state === "loading" ? (
+              <CircleNotch size={15} weight="bold" className="animate-spin" />
+            ) : (
+              <ArrowRight size={15} weight="bold" />
+            )}
+          </span>
         </button>
       </div>
       {state === "error" && (
-        <p className="mt-2 text-sm text-accent-soft" role="alert">
+        <p className="mt-2 pl-4 text-sm text-accent-soft" role="alert">
           {message}
         </p>
       )}
