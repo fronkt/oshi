@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+/* ─── Oshi design tokens (dark-locked) ─────────────────────────────────────── */
+@theme {
+  --color-ink: #0b0b12; /* page background */
+  --color-elev: #101019; /* elevated panels */
+  --color-surface: #16161f; /* cards / inputs */
+  --color-paper: #f4f4f9; /* primary text */
+  --color-muted: #9c9cb4; /* secondary text */
+  --color-faint: #5e5e76; /* tertiary text */
+  --color-accent: #ff2e74; /* single locked accent (idol penlight rose) */
+  --color-accent-soft: #ff7aa6;
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-jp: var(--font-noto-jp), var(--font-geist), sans-serif;
+
+  --radius-input: 12px;
+  --radius-card: 20px;
+  --radius-xl: 28px;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--color-accent) 32%, transparent);
+  color: #fff;
+}
+
+/* a soft rose bloom used behind focal sections */
+.bloom-accent {
+  background: radial-gradient(
+    60% 60% at 70% 8%,
+    color-mix(in oklab, var(--color-accent) 16%, transparent),
+    transparent 72%
+  );
+}
+
+/* hairline grid used as subtle texture behind the hero */
+.grid-texture {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(70% 60% at 50% 0%, #000 0%, transparent 80%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
