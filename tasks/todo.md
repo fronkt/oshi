@@ -11,16 +11,23 @@ Source of truth for scope: [`SPEC.md`](../SPEC.md). Decisions locked via grillin
 - [x] Grant-type resolved → **authorization-code** (server holds token)
 - [x] Platform source → **AniList-first**; MAL roadmapped 2nd source (v1.5+)
 - [x] Phase 0 plan approved → [`docs/PHASE0_PLAN.md`](../docs/PHASE0_PLAN.md)
-- [ ] **GATE: heavy scaffolding (EAS, Apple Dev $99/yr, AniList app reg) awaits go-ahead** ← we are here
+- [x] **Batch A — code scaffold** (Expo SDK 56 app, AniList client, cache-not-mirror schema, `health` fn, widget sources) — `tsc` green, client smoke-tested live
+- [ ] **GATE: Batch B — paid/outward (EAS build, Apple Dev $99/yr, AniList app reg, Supabase project) awaits go-ahead** ← we are here
 
 ## Phase 0 — Scaffold  (plan: docs/PHASE0_PLAN.md)
-- [ ] Expo app (TS, expo-router, CNG/dev-build — never Expo Go)
-- [ ] EAS Build configured (iOS+Android); Apple Developer enrollment ($99/yr)
-- [ ] **Widget de-risk spike** — placeholder widget renders on both home screens (exit gate)
-- [ ] Supabase project + **cache-not-mirror** schema (Oshi-native tables + `anilist_cache` TTL) + RLS
-- [ ] AniList GraphQL client (POST graphql.anilist.co, 429 backoff) — port from moodmanga
-- [ ] Supabase Edge Functions skeleton (`health`) + secrets wiring
-- [ ] Register AniList API client; email contact@anilist.co (tracker-clause authorization)
+**Batch A — code (free, no accounts) ✅**
+- [x] Expo app (SDK 56, TS, expo-router, `src/` layout, CNG/dev-build — never Expo Go)
+- [x] `app.config.ts` (name Oshi, scheme `oshi`, bundle `com.oshi.app`) + `eas.json` profiles
+- [x] AniList client `src/lib/anilist.ts` (429 backoff; viewer / followingActivity / following / saveProgress / searchMedia) — smoke-tested live
+- [x] **cache-not-mirror** schema `supabase/migrations/0001_init.sql` (Oshi-native tables + `anilist_cache` TTL) + RLS deny-by-default on every table
+- [x] Edge function `supabase/functions/health` (proves deploy + secret access)
+- [x] Widget sources staged (`widgets/ios/OshiWidget.swift`, `widgets/android/oshi-widget.tsx`) + `.env.example`
+
+**Batch B — paid / outward (gated on go-ahead)**
+- [ ] EAS build (iOS+Android) + Apple Developer enrollment ($99/yr); install dev build on a device
+- [ ] **Widget de-risk spike** — install widget libs, wire plugins, build → placeholder renders on both home screens (exit gate)
+- [ ] Supabase project (create + link) → apply `0001_init`; set function secrets
+- [ ] Register AniList API client (id/secret + redirect `oshi://auth/callback`); email contact@anilist.co (tracker-clause)
 
 ## Phase 1 — Auth + import + feed
 - [ ] AniList OAuth flow + token storage (encrypted, server-side)
