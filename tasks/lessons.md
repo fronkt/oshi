@@ -34,3 +34,19 @@ Default to **cache-not-mirror** (short TTL, per-user, serving-only) unless the T
 storage. Also surface, up front: commercial-use thresholds, competing-service clauses, and rate
 limits — they shape the architecture, not just the legal page. And sanity-check that the chosen
 provider's API can actually deliver the *core mechanic* (AniList has a friend-feed; the bigger MAL does not).
+
+## 2026-06-30 — Reach for the specialized design skills; verify generation tools before promising assets
+**Context:** User wanted a premium, non-"vibe-coded" rebuild with a 3D bonsai and Apple-style scroll, and to
+install + use the rest of the `leonxlnx/taste-skill` suite.
+
+**Pattern:** For high-end frontend, do not lean only on the general taste-skill. Pull the *specialized* local
+skills and apply them concretely: `3d-web-experience` (R3F + drei + postprocessing), `scroll-experience`
+(GSAP ScrollTrigger pin/scrub), `high-end-visual-design` (double-bezel cards, button-in-button CTAs,
+`cubic-bezier(0.32,0.72,0,1)`, blur-up reveals). They live on disk under `~/.claude/skills` and can be read +
+applied even when not registered as invocable Skill-tool skills.
+
+**Hard env constraint (verify before promising assets):** Hugging Face MCP image generation is **disabled**
+here (`gradio=none` → `invoke` blocked) and image→3D spaces (TRELLIS/Hunyuan) are **not MCP-enabled** (404 on
+`view_parameters`). So no AI render and no AI 3D model in this environment. The right move was a **procedural
+Three.js** bonsai (no asset needed) plus **real data** (AniList cover art fetched via the public API) instead
+of AI-generated imagery. Always confirm a generation tool actually runs before designing around it.
