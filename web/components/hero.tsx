@@ -1,13 +1,13 @@
 import { ArrowDown } from "@phosphor-icons/react/dist/ssr";
 import { WaitlistForm } from "./waitlist-form";
-import { BonsaiCanvas } from "./three/bonsai-canvas";
+import { BonsaiSequence } from "./bonsai-sequence";
 
 export function Hero() {
   return (
     <section id="top" className="relative min-h-[100dvh] overflow-hidden">
-      {/* live 3D bonsai backdrop, right-biased on desktop */}
-      <div className="absolute inset-0 opacity-50 lg:left-[36%] lg:opacity-100">
-        <BonsaiCanvas />
+      {/* scroll-scrubbed Blender bonsai (pre-rendered frames), right-biased on desktop */}
+      <div className="absolute inset-0 opacity-60 lg:left-[34%] lg:opacity-100">
+        <BonsaiSequence />
       </div>
 
       {/* legibility scrims */}
