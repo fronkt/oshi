@@ -67,3 +67,21 @@ tune visuals blind.
 **How to apply:** "Apple-style scrolling 3D" → reach for a pre-rendered frame sequence first; only use
 live WebGL when interactivity (free orbit, real-time input) is actually required. Match the still the user
 approved (settings/density) when batch-rendering the motion frames.
+
+## 2026-06-30 — Procedural ≠ photoreal; when realism is the bar, use a real (CC0) asset
+**Correction:** Even the *offline Blender* procedural bonsai was rejected ("still looks very bad"). Hand-built
+geometry (leaf cards, swept-curve trunks) doesn't read as real no matter how good the lighting/render is —
+photoreal comes from real photogrammetry meshes + scanned PBR textures, which you don't author by hand.
+
+**Pattern:** When the user wants photorealism, stop iterating on procedural geometry and **source a real model**.
+Best free path (this env has no AI 3D gen): **Poly Haven** — CC0 (commercial-safe, no attribution required),
+direct downloads via a public files API (`api.polyhaven.com/files/<id>`), no login. It has photoscanned potted
+plants/trees. Sketchfab/BlenderKit have more (incl. true bonsai) but need a login and are usually CC-BY
+(attribution). Preview thumbnails before committing (`cdn.polyhaven.com/asset_img/thumbs/<id>.png`); pick by
+*concept fit* (a young potted tree reads "cultivated tree/bonsai"; an arrowhead plant reads "houseplant").
+
+**How to apply:** Drop the downloaded .blend on your existing studio rig (strip its lights/cam, normalize
+height, reparent to a turntable root) so brand lighting stays consistent, render the frame sequence, then
+**recompress** the photoreal webp (they're ~3× heavier than procedural — 660px/q76 via Pillow got 9.9→3 MB).
+For a taste-sensitive visual the user has rejected twice, confirm model + finish with a quick AskUserQuestion
+before spending the full render.
