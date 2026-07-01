@@ -1,0 +1,13 @@
+Hero bonsai/potted-tree frames (bonsai_000.webp ... bonsai_035.webp)
+==================================================================
+
+3D model: "Potted Plant 01" by Poly Haven — https://polyhaven.com/a/potted_plant_01
+License:  CC0 (public domain) — no attribution required; credited here as good practice.
+
+The frames are an offline Blender (Cycles) turntable render of that model, lit on
+Oshi's studio rig, scrubbed on hero scroll. Reproduce with:
+
+  cd web/scripts
+  python fetch_model.py potted_plant_01 ./_model 2k
+  blender -b -P bonsai_model.py -- seq ./_model/potted_plant_01_2k.blend <outdir> 36 25 115 110 760 990
+  # then copy <outdir>/*.webp into web/public/bonsai/
