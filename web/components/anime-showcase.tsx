@@ -6,10 +6,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useReducedMotion } from "motion/react";
 import { ANIME_COVERS } from "@/lib/anime";
 
-// the showcase stays curated to the captioned set; the hero wall uses the full list
-const FEATURED = ANIME_COVERS.slice(0, 12);
+// the showcase scrolls through the full cover set (same list the hero wall uses)
+const FEATURED = ANIME_COVERS;
 
-// light social context under a few covers (plain captions, never overlaid on art)
+// light social context sprinkled across the scroll (plain captions, never overlaid on art)
 const ACTIVITY: (string | null)[] = [
   "Mei finished this",
   "3 friends watching",
@@ -23,6 +23,25 @@ const ACTIVITY: (string | null)[] = [
   null,
   "Mei rated it 10",
   null,
+  "Yuki finished this",
+  null,
+  "4 friends watching",
+  null,
+  "Sora rated it 8",
+  null,
+  "Rin loved it",
+  null,
+  "Kenji added it",
+  null,
+  "Nao is watching",
+  null,
+  "3 friends rated it",
+  null,
+  "Haru finished this",
+  null,
+  "Aki rated it 9",
+  null,
+  "Mei added it",
 ];
 
 export function AnimeShowcase() {
