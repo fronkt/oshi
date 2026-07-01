@@ -6,6 +6,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useReducedMotion } from "motion/react";
 import { ANIME_COVERS } from "@/lib/anime";
 
+// the showcase stays curated to the captioned set; the hero wall uses the full list
+const FEATURED = ANIME_COVERS.slice(0, 12);
+
 // light social context under a few covers (plain captions, never overlaid on art)
 const ACTIVITY: (string | null)[] = [
   "Mei finished this",
@@ -74,7 +77,7 @@ export function AnimeShowcase() {
           ref={track}
           className="flex gap-5 overflow-x-auto px-5 pb-4 will-change-transform sm:px-8 md:overflow-visible md:pb-0 md:pl-[max(2rem,calc((100vw-1200px)/2))]"
         >
-          {ANIME_COVERS.map((a, i) => (
+          {FEATURED.map((a, i) => (
             <article key={a.id} className="group w-[200px] shrink-0">
               <div
                 className="overflow-hidden rounded-2xl border border-white/10 bg-surface"
