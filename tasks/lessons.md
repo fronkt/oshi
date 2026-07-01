@@ -85,3 +85,17 @@ height, reparent to a turntable root) so brand lighting stays consistent, render
 **recompress** the photoreal webp (they're ~3× heavier than procedural — 660px/q76 via Pillow got 9.9→3 MB).
 For a taste-sensitive visual the user has rejected twice, confirm model + finish with a quick AskUserQuestion
 before spending the full render.
+
+## 2026-06-30 — The concept can be the problem, not the execution; and screenshot web visuals
+**Context:** After 4 bonsai attempts (2 procedural + 1 real 3D model, all rejected), the user said "remove the
+bonsai" and asked for a semi-opaque anime cover-art panel instead. The simple CSS poster wall landed in one shot.
+
+**Pattern:** When a specific asset keeps getting rejected across execution approaches, the issue may be the
+**concept**, not the craft — stop polishing it and offer a fundamentally different direction. A wall of the
+product's *own real content* (AniList covers) is more on-brand for an anime app than any decorative 3D object,
+and far cheaper (a CSS marquee + `mask-image` gradient vs. hours of Blender). Don't over-engineer a hero.
+
+**Verification:** For web UI, *look at it* — drive **headless Chrome** (`chrome --headless=new
+--window-size=W,H --screenshot=out.png --virtual-time-budget=9000 <url>`) against the dev server and Read the
+PNG, at desktop AND mobile widths. Chrome/Edge are on this machine. This is the web analog of the Blender
+render-and-verify loop; never ship a visual change you haven't seen rendered.
