@@ -73,6 +73,37 @@ body {
   mask-image: radial-gradient(70% 60% at 50% 0%, #000 0%, transparent 80%);
 }
 
+/* hero poster wall — semi-opaque panel that fades left→right into the ink,
+   with a soft top/bottom vignette so the drifting columns never hard-cut */
+.wall-mask {
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, transparent 6%, #000 58%),
+    linear-gradient(to bottom, transparent 0%, #000 12%, #000 86%, transparent 100%);
+  mask-image:
+    linear-gradient(to right, transparent 0%, transparent 6%, #000 58%),
+    linear-gradient(to bottom, transparent 0%, #000 12%, #000 86%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+/* seamless vertical marquee (list is duplicated; -50% lands on the copy) */
+@keyframes wall-up {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+@keyframes wall-down {
+  from {
+    transform: translate3d(0, -50%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

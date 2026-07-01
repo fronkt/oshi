@@ -1,18 +1,18 @@
 import { ArrowDown } from "@phosphor-icons/react/dist/ssr";
 import { WaitlistForm } from "./waitlist-form";
-import { BonsaiSequence } from "./bonsai-sequence";
+import { AnimeWall } from "./anime-wall";
 
 export function Hero() {
   return (
     <section id="top" className="relative min-h-[100dvh] overflow-hidden">
-      {/* scroll-scrubbed Blender bonsai (pre-rendered frames), right-biased on desktop */}
-      <div className="absolute inset-0 opacity-60 lg:left-[34%] lg:opacity-100">
-        <BonsaiSequence />
+      {/* semi-opaque wall of real cover art, fading left→right into the ink */}
+      <div className="absolute inset-0 opacity-45 lg:opacity-70">
+        <AnimeWall />
       </div>
 
       {/* legibility scrims */}
       <div
-        className="pointer-events-none absolute inset-0 bg-linear-to-r from-ink via-ink/85 to-transparent lg:via-ink/35"
+        className="pointer-events-none absolute inset-0 bg-linear-to-r from-ink via-ink/90 to-transparent lg:via-ink/55"
         aria-hidden
       />
       <div
