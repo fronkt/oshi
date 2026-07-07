@@ -6,14 +6,16 @@ import {
   CalendarBlank,
 } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./reveal";
+import { TextReveal } from "./text-reveal";
+import { SpotlightCard } from "./spotlight-card";
 
 export function FeaturesBento() {
   return (
     <section id="features" className="mx-auto max-w-[1200px] px-5 py-24 sm:px-8 sm:py-32">
       <div className="max-w-2xl">
-        <h2 className="font-display text-3xl font-bold tracking-tight sm:text-5xl">
+        <TextReveal className="font-display text-3xl font-bold tracking-tight sm:text-5xl">
           Built for the way you actually watch.
-        </h2>
+        </TextReveal>
         <p className="mt-4 max-w-lg text-lg text-muted">
           Five pieces that turn a solo tracker into a place you and your friends
           keep coming back to.
@@ -23,7 +25,7 @@ export function FeaturesBento() {
       <div className="mt-12 grid auto-rows-[minmax(0,1fr)] grid-cols-1 gap-4 md:grid-cols-6">
         {/* Feed — large, with visual */}
         <Reveal className="md:col-span-4 md:row-span-2">
-          <article className="relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-white/8 bg-surface p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:border-white/15">
+          <SpotlightCard className="relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-white/8 bg-surface p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:border-white/15">
             <div className="pointer-events-none absolute -right-10 -top-10 size-60 bloom-accent opacity-80" />
             <Icon>
               <UsersThree size={20} weight="bold" />
@@ -54,12 +56,12 @@ export function FeaturesBento() {
                 </div>
               ))}
             </div>
-          </article>
+          </SpotlightCard>
         </Reveal>
 
         {/* Score — visual number */}
         <Reveal delay={0.06} className="md:col-span-2">
-          <article className="relative flex h-full flex-col justify-between overflow-hidden rounded-[var(--radius-card)] border border-accent/20 bg-linear-to-br from-accent/12 to-transparent p-7">
+          <SpotlightCard className="relative flex h-full flex-col justify-between overflow-hidden rounded-[var(--radius-card)] border border-accent/20 bg-linear-to-br from-accent/12 to-transparent p-7">
             <Icon>
               <Sparkle size={20} weight="fill" />
             </Icon>
@@ -75,7 +77,7 @@ export function FeaturesBento() {
                 everyone watched.
               </p>
             </div>
-          </article>
+          </SpotlightCard>
         </Reveal>
 
         {/* Logger */}
@@ -98,7 +100,7 @@ export function FeaturesBento() {
 
         {/* Recap — gradient visual */}
         <Reveal delay={0.12} className="md:col-span-3">
-          <article className="relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-white/8 bg-surface p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:border-white/15">
+          <SpotlightCard className="relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-white/8 bg-surface p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:border-white/15">
             <Icon>
               <CalendarBlank size={20} weight="bold" />
             </Icon>
@@ -116,7 +118,7 @@ export function FeaturesBento() {
                 />
               ))}
             </div>
-          </article>
+          </SpotlightCard>
         </Reveal>
       </div>
     </section>
@@ -141,10 +143,10 @@ function FeatureCard({
   body: string;
 }) {
   return (
-    <article className="flex h-full flex-col rounded-[var(--radius-card)] border border-white/8 bg-surface p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:border-white/15">
+    <SpotlightCard className="flex h-full flex-col rounded-[var(--radius-card)] border border-white/8 bg-surface p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:border-white/15">
       <Icon>{icon}</Icon>
       <h3 className="mt-5 font-display text-lg font-semibold">{title}</h3>
       <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{body}</p>
-    </article>
+    </SpotlightCard>
   );
 }

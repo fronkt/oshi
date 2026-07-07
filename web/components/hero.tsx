@@ -1,6 +1,7 @@
 import { ArrowDown } from "@phosphor-icons/react/dist/ssr";
 import { WaitlistForm } from "./waitlist-form";
 import { Hero3D } from "./hero-3d";
+import { TextReveal } from "./text-reveal";
 
 export function Hero() {
   return (
@@ -29,11 +30,14 @@ export function Hero() {
             Early access
           </span>
 
-          <h1 className="mt-6 font-display text-[2.7rem] font-bold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
+          <TextReveal
+            as="h1"
+            className="mt-6 font-display text-[2.7rem] font-bold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl"
+          >
             Anime is better
             <br />
             <span className="text-accent">with your people.</span>
-          </h1>
+          </TextReveal>
 
           <p className="mt-6 max-w-md text-lg leading-relaxed text-muted">
             See what your friends are watching, how closely your taste matches,

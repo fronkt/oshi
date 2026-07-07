@@ -116,3 +116,123 @@ body {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ── custom cursor (dot glued via #cursor-dot, mouse-follower = trailing ring) ── */
+.has-cursor,
+.has-cursor a,
+.has-cursor button,
+.has-cursor canvas,
+.has-cursor label {
+  cursor: none;
+}
+.has-cursor.cursor-native,
+.has-cursor.cursor-native * {
+  cursor: auto;
+}
+#cursor-dot {
+  position: fixed;
+  top: -3px;
+  left: -3px;
+  z-index: 10000;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  pointer-events: none;
+}
+.cursor-native #cursor-dot,
+.cursor-native .mf-cursor {
+  opacity: 0;
+}
+/* restyle mouse-follower's circle into a brand ring */
+.mf-cursor {
+  z-index: 9999;
+}
+.mf-cursor::before {
+  background: transparent;
+  border: 1.5px solid rgba(244, 244, 249, 0.45);
+  width: 36px;
+  height: 36px;
+  top: -18px;
+  left: -18px;
+  transition:
+    transform 0.35s cubic-bezier(0.32, 0.72, 0, 1),
+    border-color 0.35s;
+}
+.mf-cursor.-pointer::before {
+  transform: scale(1.5);
+  border-color: rgba(255, 46, 116, 0.75);
+}
+.mf-cursor.-grab::before {
+  transform: scale(2.1);
+  border-color: rgba(255, 46, 116, 0.9);
+}
+
+/* ── shine border: slow conic highlight orbiting the waitlist pill ── */
+@property --shine {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.shine-border {
+  position: relative;
+}
+.shine-border::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 9999px;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--shine),
+    transparent 0deg,
+    transparent 318deg,
+    rgba(255, 122, 166, 0.95) 342deg,
+    rgba(255, 46, 116, 0.5) 352deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: shine-spin 4.5s linear infinite;
+  pointer-events: none;
+}
+@keyframes shine-spin {
+  to {
+    --shine: 360deg;
+  }
+}
+
+/* ── bento spotlight: cursor-tracked rose glow ── */
+.spotlight-card {
+  position: relative;
+}
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    220px circle at var(--sx, 50%) var(--sy, 50%),
+    rgba(255, 46, 116, 0.09),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+  pointer-events: none;
+}
+.spotlight-card:hover::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shine-border::after {
+    animation: none;
+  }
+  #cursor-dot,
+  .mf-cursor {
+    display: none;
+  }
+}

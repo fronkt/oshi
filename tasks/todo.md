@@ -53,7 +53,17 @@ Locked: hero → full R3F cover-wall v2 (revert path = CSS wall) · shadergradie
 - [x] Hero 3D cover wall (`hero-3d-scene.tsx` + `hero-3d.tsx` wrapper): 60 drei-Image planes, 3 depth layers w/ perspective-spread columns, drift, parallax, force-field, drag inertia + idle glide-home, focus card + DOM caption (Esc/click-away/scroll dismiss), ScrollTrigger dolly/scatter
 - [x] Tier wiring verified via playwright-core (`web/scripts/`): mobile = 2 layers + tap-focus + native scroll ✓, reduced-motion = CSS wall no canvas ✓, 60fps 2s sample desktop ✓
 - [x] **Gotchas burned in**: (1) same-URL `<img>` no-CORS cache poisons WebGL textures → EVERY cover consumer needs `crossOrigin="anonymous"`; (2) never damp `mesh.scale` to 1 when geometry size lives in scale — bake W/H into targets
-- [ ] **Preview deploy → Frank judges on laptop + phone → promote to prod** (bar: 60fps drag+scroll, no phone jank, headline legible, all tiers sane)
+- [x] Preview deployed (oshi-d75cj66a8, share link sent) — Frank: "3D wall looks nice" → **stacking premium-lift batch on top, single combined promote after judging**
+
+## Web — premium-lift batch (grilled 2026-07-07, scope (d) w/ (c)/(b) strip-back plan)
+Locked: SplitText masked reveals (hero h1 + all section h2s, once, reduced-motion skips) · penlight sparkles @ compat ring + CTA band (sparse rose) · number-flow on compat % (rolls on scroll-into-view) · OG card = owned pixels only (ink + rose gradient + 推 + headline; NO cover art — distributor rule) · cursor = dot + trailing ring, grab-state over wall, native in inputs, fine-pointer only · curtains.js ripple on showcase hover (touch/reduced-motion = current scale) · shine-border on waitlist CTA buttons + spotlight hover on bento cards (vendored, ink/rose). Each piece = one clean strip-commit.
+- [x] deps: @number-flow/react, mouse-follower, curtainsjs (SplitText ships in gsap ≥3.13 free)
+- [x] SplitText `text-reveal.tsx` → hero h1 + all 6 section h2s (fonts-ready gate, masked lines, once)
+- [x] OG image route (fetch-TTF-via-css2-no-UA trick, &text= subsetting; 推 via Noto JP) — verified 200 PNG, card looks premium
+- [x] cursor (mouse-follower ring + own glued dot; grab over wall; native over inputs), penlight sparkles (canvas2D not drei — avoids 2 more WebGL contexts), number-flow on compat %, shine-border on waitlist pill, spotlight on all 6 bento cards
+- [x] **curtains.js STRIPPED per backup plan** — 31 planes ready but never drew a pixel (real GPU, no errors; eager-img + texture-upload gate + alwaysDraw all no-ops); lesson recorded; future distortion = R3F drei View
+- [x] verify: cursor/split/number-flow/OG all live, 60fps, zero console errors, mobile + reduced-motion tiers hold, `next build` green
+- [ ] stacked preview → Frank judges → single promote (strip cursor/any piece on request)
 
 ## Phase 1 — Auth + import + feed
 - [ ] AniList OAuth flow + token storage (encrypted, server-side)

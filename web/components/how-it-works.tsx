@@ -1,5 +1,6 @@
 import { Plugs, DeviceMobileCamera, UsersThree } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./reveal";
+import { TextReveal } from "./text-reveal";
 
 const STEPS = [
   {
@@ -23,9 +24,9 @@ export function HowItWorks() {
   return (
     <section id="how" className="mx-auto max-w-[1200px] px-5 py-24 sm:px-8 sm:py-32">
       <div className="max-w-2xl">
-        <h2 className="font-display text-3xl font-bold tracking-tight sm:text-5xl">
+        <TextReveal className="font-display text-3xl font-bold tracking-tight sm:text-5xl">
           Set up in under a minute.
-        </h2>
+        </TextReveal>
         <p className="mt-4 max-w-md text-lg text-muted">
           No new social graph to build. Oshi plugs into the account you already use.
         </p>

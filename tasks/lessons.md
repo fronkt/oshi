@@ -114,3 +114,19 @@ runtime, in headers/URLs (ByteString conversion, invalid-URL). The value *looks*
 (no BOM, no trailing newline) — never from PowerShell. And always smoke-test the deployed API route
 itself after wiring env vars; the homepage rendering proves nothing about function env health. Char
 65279 / U+FEFF in an error = BOM contamination, look at how the value was written.
+
+## 2026-07-07 — curtains.js wouldn't render under GSAP-pin + Lenis; time-box exotic WebGL wrappers
+**Context:** curtains.js planes over the showcase covers reported ready (31 planes, no console errors,
+canvas correctly sized, real GPU) but never drew a pixel. Tried: eager-loading lazy imgs, hiding imgs
+only on texture upload, `alwaysDraw: true` to bypass culling — all no-ops. Stripped it per the
+pre-agreed backup plan.
+
+**Pattern:** small single-purpose WebGL wrappers (curtains.js) interact badly with a page that already
+has GSAP pinning, transformed ancestors, and Lenis-smoothed scroll — and they fail *silently* (no error
+path fires). The pmndrs/R3F stack on the same page had no such trouble. When a decorative effect
+doesn't render after ~3 distinct hypotheses, execute the strip-back plan instead of reverse-engineering
+the library; that's why the grill locked a backup scope up front.
+
+**How to apply:** for image-distortion effects on this site, build them in the existing R3F stack (drei
+`View` tracks DOM rects) rather than adding another WebGL wrapper. And always agree on a strip-back
+plan before building the risky item — it converts sunk-cost debugging into a one-commit subtraction.

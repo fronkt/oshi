@@ -2,6 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { animate, useInView, useReducedMotion } from "motion/react";
+import NumberFlow from "@number-flow/react";
+import { TextReveal } from "./text-reveal";
+import { PenlightSparkles } from "./penlight-sparkles";
 
 const SCORE = 92;
 const R = 80;
@@ -31,6 +34,7 @@ export function Compatibility() {
   return (
     <section id="compat" className="relative overflow-hidden border-y border-white/8 bg-elev/40">
       <div className="pointer-events-none absolute inset-0 bloom-accent opacity-60" aria-hidden />
+      <PenlightSparkles count={36} />
       <div
         ref={ref}
         className="relative mx-auto flex max-w-2xl flex-col items-center px-5 py-24 text-center sm:py-32"
@@ -72,14 +76,19 @@ export function Compatibility() {
             />
           </svg>
           <div className="absolute flex flex-col items-center">
-            <span className="font-display text-5xl font-bold tracking-tight">{val}%</span>
+            <NumberFlow
+              value={inView ? SCORE : 0}
+              suffix="%"
+              animated={!reduce}
+              className="font-display text-5xl font-bold tracking-tight"
+            />
             <span className="text-sm text-muted">taste match</span>
           </div>
         </div>
 
-        <h2 className="mt-10 font-display text-3xl font-bold tracking-tight sm:text-5xl">
+        <TextReveal className="mt-10 font-display text-3xl font-bold tracking-tight sm:text-5xl">
           How well does your taste actually match?
-        </h2>
+        </TextReveal>
         <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted">
           Oshi compares your lists the way a friend would. Shared megahits count for
           little. The obscure shows you both love count for a lot. That is your score,

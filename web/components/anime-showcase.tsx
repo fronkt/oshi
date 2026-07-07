@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useReducedMotion } from "motion/react";
 import { ANIME_COVERS } from "@/lib/anime";
+import { TextReveal } from "./text-reveal";
 
 // the showcase scrolls through the full cover set (same list the hero wall uses)
 const FEATURED = ANIME_COVERS;
@@ -81,12 +82,12 @@ export function AnimeShowcase() {
     <section id="showcase" className="relative border-y border-white/8 bg-[#070709]">
       <div
         ref={wrap}
-        className="flex flex-col justify-center gap-9 py-20 md:h-[100dvh] md:py-0"
+        className="relative flex flex-col justify-center gap-9 py-20 md:h-[100dvh] md:py-0"
       >
         <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-8">
-          <h2 className="max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-5xl">
+          <TextReveal className="max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-5xl">
             Real titles. Real ratings. The friends watching alongside you.
-          </h2>
+          </TextReveal>
           <p className="mt-4 max-w-md text-lg text-muted">
             Your feed is built from live AniList activity, not a generic timeline.
           </p>
@@ -132,6 +133,7 @@ export function AnimeShowcase() {
             </article>
           ))}
         </div>
+
       </div>
     </section>
   );

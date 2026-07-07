@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CaretDown } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/cn";
+import { TextReveal } from "./text-reveal";
 
 const QA = [
   {
@@ -32,9 +33,9 @@ export function Faq() {
 
   return (
     <section id="faq" className="mx-auto max-w-[760px] px-5 py-24 sm:px-8 sm:py-32">
-      <h2 className="font-display text-3xl font-bold tracking-tight sm:text-5xl">
+      <TextReveal className="font-display text-3xl font-bold tracking-tight sm:text-5xl">
         Questions, answered.
-      </h2>
+      </TextReveal>
 
       <div className="mt-10 divide-y divide-white/8 border-y border-white/8">
         {QA.map((item, i) => {

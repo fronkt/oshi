@@ -67,7 +67,7 @@ export function WaitlistForm({
   return (
     <form onSubmit={onSubmit} className={cn("w-full", className)} noValidate>
       {/* double-bezel pill: input + button-in-button live in one machined shell */}
-      <div className="flex items-center gap-2 rounded-full border border-white/10 bg-surface/70 p-1.5 backdrop-blur-md transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] focus-within:border-accent/50 focus-within:ring-2 focus-within:ring-accent/15">
+      <div className="shine-border flex items-center gap-2 rounded-full border border-white/10 bg-surface/70 p-1.5 backdrop-blur-md transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] focus-within:border-accent/50 focus-within:ring-2 focus-within:ring-accent/15">
         <label htmlFor={`email-${source}`} className="sr-only">
           Email address
         </label>
