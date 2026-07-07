@@ -13,7 +13,8 @@ Source of truth for scope: [`SPEC.md`](../SPEC.md). Decisions locked via grillin
 - [x] Phase 0 plan approved → [`docs/PHASE0_PLAN.md`](../docs/PHASE0_PLAN.md)
 - [x] **Batch A — code scaffold** (Expo SDK 56 app, AniList client, cache-not-mirror schema, `health` fn, widget sources) — `tsc` green, client smoke-tested live
 - [x] **Pre-launch website** (`web/`, Next 16 + Tailwind v4 + Motion) — built with taste skill, `next build` green, waitlist API smoke-tested
-- [ ] **GATE: Batch B — paid/outward (EAS build, Apple Dev $99/yr, AniList app reg, Supabase project) awaits go-ahead**
+- [x] **Supabase project live** (2026-07-07): `oshi` (ref `mnjmzqfgjhmidhbahblj`, us-east-2, free tier) via MCP; `0001_init` + `0002_waitlist` applied; waitlist E2E-verified against prod DB
+- [ ] **GATE: Batch B — remaining paid/outward (EAS build, Apple Dev $99/yr, AniList app reg) awaits go-ahead**
 
 ## Phase 0 — Scaffold  (plan: docs/PHASE0_PLAN.md)
 **Batch A — code (free, no accounts) ✅**
@@ -27,7 +28,7 @@ Source of truth for scope: [`SPEC.md`](../SPEC.md). Decisions locked via grillin
 **Batch B — paid / outward (gated on go-ahead)**
 - [ ] EAS build (iOS+Android) + Apple Developer enrollment ($99/yr); install dev build on a device
 - [ ] **Widget de-risk spike** — install widget libs, wire plugins, build → placeholder renders on both home screens (exit gate)
-- [ ] Supabase project (create + link) → apply `0001_init`; set function secrets
+- [x] Supabase project (created via MCP, ref `mnjmzqfgjhmidhbahblj`) → `0001_init` + `0002_waitlist` applied. Still open: CLI link + function secrets (with edge-fn deploy)
 - [ ] Register AniList API client (id/secret + redirect `oshi://auth/callback`); email contact@anilist.co (tracker-clause)
 
 ## Web — pre-launch landing (`web/`, Next.js 16) ✅
@@ -39,7 +40,8 @@ Built before the apps to validate demand with zero paid accounts. Deploys to Ver
 - [x] Sections: hero (live phone mock) · syncs-with strip · feature bento · compatibility ring · how-it-works · FAQ · CTA band
 - [x] Waitlist API `web/app/api/waitlist` → Supabase `waitlist` table (`0002_waitlist.sql`), graceful no-env fallback
 - [x] `next build` green; runtime smoke (200 + API ok); zero em-dashes, eyebrow budget respected
-- [ ] Deploy to Vercel (root dir = `web/`; set `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` for live waitlist)
+- [x] **Waitlist wired to prod Supabase** (2026-07-07): switched service-role key → **publishable key + anon INSERT-only RLS** (smaller blast radius; MCP never exposes secrets) + DB CHECK mirrors route's email regex. Gotcha: PostgREST `resolution=ignore-duplicates` (ON CONFLICT) needs SELECT under RLS → dropped it, duplicates ride the existing 409-is-success branch. E2E: valid/dup/invalid via route + direct-REST junk/SELECT/DELETE all behave; test rows cleaned
+- [ ] Deploy to Vercel (root dir = `web/`; env: `SUPABASE_URL` + `SUPABASE_PUBLISHABLE_KEY`)
 - [ ] Point a domain (currently `oshi.app` placeholder in metadata)
 
 ## Phase 1 — Auth + import + feed

@@ -1,8 +1,10 @@
 // Waitlist intake for the pre-launch site.
-// Supabase-ready: if SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY are set, the email
+// Supabase-ready: if SUPABASE_URL + SUPABASE_PUBLISHABLE_KEY are set, the email
 // is inserted into the `waitlist` table (see supabase/migrations/0002_waitlist.sql)
-// via the REST endpoint. With no env configured (local/dev), it accepts gracefully
-// so the UI is testable without a backend. The service-role key is server-only.
+// via the REST endpoint. The publishable key is deliberate: RLS grants anon
+// INSERT-only on this one table, so the marketing site never holds a key that can
+// read anything. With no env configured (local/dev), it accepts gracefully so the
+// UI is testable without a backend.
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -23,16 +25,18 @@ export async function POST(req: Request) {
   }
 
   const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY;
 
   if (url && key) {
     const res = await fetch(`${url}/rest/v1/waitlist`, {
       method: "POST",
       headers: {
         apikey: key,
-        Authorization: `Bearer ${key}`,
         "Content-Type": "application/json",
-        Prefer: "resolution=ignore-duplicates",
+        // return=minimal: no RETURNING clause, so anon needs no SELECT policy.
+        // (No resolution=ignore-duplicates — its ON CONFLICT arbitration also
+        // requires SELECT under RLS; duplicates surface as 409 instead.)
+        Prefer: "return=minimal",
       },
       body: JSON.stringify({ email, source }),
     });
