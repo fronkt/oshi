@@ -6,6 +6,7 @@ import {
   Noto_Sans_JP,
 } from "next/font/google";
 import "./globals.css";
+import { SmoothScroll } from "@/components/smooth-scroll";
 
 const geist = Geist({ variable: "--font-geist", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -46,6 +47,7 @@ export default function RootLayout({
       className={`${geist.variable} ${geistMono.variable} ${bricolage.variable} ${notoJP.variable} antialiased`}
     >
       <body className="min-h-[100dvh] bg-ink text-paper">
+        <SmoothScroll />
         <div className="grain" aria-hidden />
         {children}
       </body>

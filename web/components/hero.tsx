@@ -1,13 +1,14 @@
 import { ArrowDown } from "@phosphor-icons/react/dist/ssr";
 import { WaitlistForm } from "./waitlist-form";
-import { AnimeWall } from "./anime-wall";
+import { Hero3D } from "./hero-3d";
 
 export function Hero() {
   return (
     <section id="top" className="relative min-h-[100dvh] overflow-hidden">
-      {/* semi-opaque wall of real cover art, fading left→right into the ink */}
-      <div className="absolute inset-0 opacity-45 lg:opacity-70">
-        <AnimeWall />
+      {/* interactive 3D wall of real cover art (CSS wall fallback inside);
+          opacity/muting is handled inside so the focus card stays vivid */}
+      <div className="absolute inset-0">
+        <Hero3D />
       </div>
 
       {/* legibility scrims */}
@@ -20,8 +21,10 @@ export function Hero() {
         aria-hidden
       />
 
-      <div className="relative mx-auto flex min-h-[100dvh] max-w-[1200px] flex-col justify-center px-5 pt-28 pb-20 sm:px-8 lg:pt-24">
-        <div className="max-w-xl">
+      {/* pointer-events pass through the content box to the canvas, except on
+          the actual interactive column (headline, form, links) */}
+      <div className="pointer-events-none relative mx-auto flex min-h-[100dvh] max-w-[1200px] flex-col justify-center px-5 pt-28 pb-20 sm:px-8 lg:pt-24">
+        <div className="pointer-events-auto max-w-xl">
           <span className="inline-flex items-center rounded-full border border-white/12 bg-white/5 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.22em] text-paper/80 backdrop-blur-sm">
             Early access
           </span>

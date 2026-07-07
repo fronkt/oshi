@@ -109,6 +109,9 @@ export function AnimeShowcase() {
                   width={200}
                   height={285}
                   loading="lazy"
+                  // must match anime-wall/hero-3d: every consumer of these URLs
+                  // uses CORS mode, or the shared cache poisons WebGL textures
+                  crossOrigin="anonymous"
                   className="h-[285px] w-[200px] object-cover transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-[1.04]"
                 />
               </div>

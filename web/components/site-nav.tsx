@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { List, X } from "@phosphor-icons/react/dist/ssr";
+import { LiquidMark } from "./liquid-mark";
 
 const LINKS = [
   { href: "#features", label: "Features" },
@@ -17,9 +18,7 @@ export function SiteNav() {
     <header className="fixed inset-x-0 top-0 z-50 px-4">
       <nav className="mx-auto mt-4 flex h-14 max-w-[1080px] items-center justify-between rounded-full border border-white/10 bg-ink/55 pl-5 pr-2 backdrop-blur-xl">
         <a href="#top" className="flex items-center gap-2.5" aria-label="Oshi home">
-          <span className="grid size-7 place-items-center rounded-lg bg-accent text-ink">
-            <span className="font-jp text-[15px] font-bold leading-none">推</span>
-          </span>
+          <LiquidMark />
           <span className="font-display text-lg font-semibold tracking-tight">Oshi</span>
         </a>
 

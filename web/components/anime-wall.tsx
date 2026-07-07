@@ -47,6 +47,9 @@ export function AnimeWall() {
                     src={a.cover}
                     alt={a.title}
                     loading="lazy"
+                    // CORS-mode so the cached response is reusable as a WebGL
+                    // texture by hero-3d (a no-CORS cache entry would poison it)
+                    crossOrigin="anonymous"
                     className="h-full w-full object-cover"
                   />
                   {/* keep each poster slightly muted so the panel reads semi-opaque */}

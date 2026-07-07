@@ -45,6 +45,16 @@ Built before the apps to validate demand with zero paid accounts. Deploys to Ver
 - [ ] Point a domain (currently `oshi.app` placeholder in metadata; site lives at oshi-pi.vercel.app)
 - [x] **Design/effect toolkit installed** (2026-07-07): pmndrs WebGL stack (`three`+R3F 9+drei+postprocessing+maath, `leva` dev), `shadergradient`, `@paper-design/shaders-react` (= liquid-logo's LiquidMetal engine), `liquid-glass-react`+`liquid-glass-js`, `lenis`, `cobe` — all React-19-clean, single deduped `three`, build green; catalog in `web/README.md`. Unused-until-imported (no bundle cost yet)
 
+## Web — immersive rebuild (grilled 2026-07-07, 9 locked decisions)
+Locked: hero → full R3F cover-wall v2 (revert path = CSS wall) · shadergradient owns final CTA · interactivity = parallax + scroll choreography + full toy (drag inertial pan w/ rubber-band, hover = physics force-field + brighten, click = focus card w/ title+meta, non-clickable-out) · tiered (desktop full / mobile trimmed DPR≤1.5 no force-field / reduced-motion+no-WebGL = CSS wall) · riders = Lenis smooth scroll + LiquidMetal 推 nav mark · ship = preview deploy → Frank judges laptop+phone → promote. Bar: 60fps desktop drag+scroll, no phone jank, headline always legible, build green.
+- [x] SmoothScroll (lenis + ScrollTrigger sync, anchor glide, reduced-motion skip)
+- [x] CTA ShaderGradient (ink+rose waterPlane, lazy IO-mount, static fallback) — React-19 compat verified live (only THREE.Clock deprecation warnings)
+- [x] LiquidMetal 推 mark in nav (canvas-rasterized dark glyph → shader; flat-mark fallback until fonts ready)
+- [x] Hero 3D cover wall (`hero-3d-scene.tsx` + `hero-3d.tsx` wrapper): 60 drei-Image planes, 3 depth layers w/ perspective-spread columns, drift, parallax, force-field, drag inertia + idle glide-home, focus card + DOM caption (Esc/click-away/scroll dismiss), ScrollTrigger dolly/scatter
+- [x] Tier wiring verified via playwright-core (`web/scripts/`): mobile = 2 layers + tap-focus + native scroll ✓, reduced-motion = CSS wall no canvas ✓, 60fps 2s sample desktop ✓
+- [x] **Gotchas burned in**: (1) same-URL `<img>` no-CORS cache poisons WebGL textures → EVERY cover consumer needs `crossOrigin="anonymous"`; (2) never damp `mesh.scale` to 1 when geometry size lives in scale — bake W/H into targets
+- [ ] **Preview deploy → Frank judges on laptop + phone → promote to prod** (bar: 60fps drag+scroll, no phone jank, headline legible, all tiers sane)
+
 ## Phase 1 — Auth + import + feed
 - [ ] AniList OAuth flow + token storage (encrypted, server-side)
 - [ ] Import follows + their public activity (`Page.activities isFollowing:true`)
