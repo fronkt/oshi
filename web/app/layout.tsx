@@ -5,8 +5,8 @@ import {
   Bricolage_Grotesque,
   Noto_Sans_JP,
 } from "next/font/google";
-import "./globals.css";
 import "mouse-follower/dist/mouse-follower.min.css";
+import "./globals.css"; /* after the lib css so our cursor skin always wins */
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { Cursor } from "@/components/cursor";
 

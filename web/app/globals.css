@@ -159,12 +159,15 @@ body {
     transform 0.35s cubic-bezier(0.32, 0.72, 0, 1),
     border-color 0.35s;
 }
+/* states keep the ring at its base size — color is the only feedback
+   (the 1.5×/2.1× swell read as too large; transform:none also suppresses
+   mouse-follower's own built-in state scaling) */
 .mf-cursor.-pointer::before {
-  transform: scale(1.5);
+  transform: none;
   border-color: rgba(255, 46, 116, 0.75);
 }
 .mf-cursor.-grab::before {
-  transform: scale(2.1);
+  transform: none;
   border-color: rgba(255, 46, 116, 0.9);
 }
 
