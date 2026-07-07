@@ -63,7 +63,7 @@ Locked: SplitText masked reveals (hero h1 + all section h2s, once, reduced-motio
 - [x] cursor (mouse-follower ring + own glued dot; grab over wall; native over inputs), penlight sparkles (canvas2D not drei — avoids 2 more WebGL contexts), number-flow on compat %, shine-border on waitlist pill, spotlight on all 6 bento cards
 - [x] **curtains.js STRIPPED per backup plan** — 31 planes ready but never drew a pixel (real GPU, no errors; eager-img + texture-upload gate + alwaysDraw all no-ops); lesson recorded; future distortion = R3F drei View
 - [x] verify: cursor/split/number-flow/OG all live, 60fps, zero console errors, mobile + reduced-motion tiers hold, `next build` green
-- [ ] stacked preview → Frank judges → single promote (strip cursor/any piece on request)
+- [x] stacked preview → Frank judged (one fix: cursor swell removed, ring fixed-size + color-only states) → **PROMOTED to prod 2026-07-07** via fresh `--prod` deploy (NOT `vercel promote` — preview builds lack Production-env Supabase keys → waitlist would silently no-op). Prod smoke: homepage/OG 200, waitlist row verified in DB + cleaned, wall + cursor live, zero page errors. https://oshi-pi.vercel.app is the full immersive site
 
 ## Phase 1 — Auth + import + feed
 - [ ] AniList OAuth flow + token storage (encrypted, server-side)
