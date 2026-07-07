@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Oshi — pre-launch site
 
-## Getting Started
-
-First, run the development server:
+Next.js 16 + Tailwind v4 marketing site. Live at https://oshi-pi.vercel.app (Vercel project `oshi`, CLI-deployed; waitlist → Supabase, see `app/api/waitlist/route.ts`).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev    # local dev (http://localhost:3000)
+npm run build  # production build — keep this green
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Design / effect toolkit (installed, import on demand)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+All tree-shaken: zero bundle cost until a component actually imports them.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**WebGL / 3D (pmndrs stack, single deduped `three`)**
+- `three` + `@react-three/fiber` — React renderer for three.js
+- `@react-three/drei` — R3F helpers (cameras, text, environments, MeshTransmissionMaterial for real refractive glass)
+- `@react-three/postprocessing` — bloom, chromatic aberration, DoF, grain
+- `maath` — math/easing helpers for R3F work
+- `leva` (dev) — tweak-panel for dialing in shader/scene params
 
-## Learn More
+**Shader gradients & liquid metal**
+- `shadergradient` — the Framer-famous animated 3D gradients (`<ShaderGradientCanvas>`)
+- `@paper-design/shaders-react` — paper.design shader suite: `LiquidMetal` (the engine behind their liquid-logo app), `MeshGradient`, `GodRays`, `NeuroNoise`, etc. GPU-cheap, no three.js needed
 
-To learn more about Next.js, take a look at the following resources:
+**Apple "liquid glass"**
+- `liquid-glass-react` — React port of the WWDC-25 glass look (displacement + blur + specular)
+- `liquid-glass-js` — zero-dep cross-browser refraction as a JS class / `<liquid-glass>` web component
+- (shuding/liquid-glass on GitHub is the same effect but isn't packaged — not installable)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Motion / scroll / misc**
+- `gsap` (+ ScrollTrigger) and `motion` — already in use across the site
+- `lenis` — buttery smooth-scroll, pairs with ScrollTrigger
+- `cobe` — the dotted WebGL globe (Stripe/Vercel style)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Notes: `liquid-logo` is paper-design's private Next app, not a library — its effect ships in `@paper-design/shaders-react`. R3F/WebGL components must be client components (`"use client"`) and should be `next/dynamic`-imported with `ssr: false`. Respect `prefers-reduced-motion` (see `anime-wall.tsx` for the house pattern).
