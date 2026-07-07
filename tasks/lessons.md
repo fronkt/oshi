@@ -99,3 +99,18 @@ and far cheaper (a CSS marquee + `mask-image` gradient vs. hours of Blender). Do
 --window-size=W,H --screenshot=out.png --virtual-time-budget=9000 <url>`) against the dev server and Read the
 PNG, at desktop AND mobile widths. Chrome/Edge are on this machine. This is the web analog of the Blender
 render-and-verify loop; never ship a visual change you haven't seen rendered.
+
+## 2026-07-07 — Windows PowerShell pipes poison secrets with a BOM; pipe env values from bash
+**Context:** `"value" | npx vercel env add …` in Windows PowerShell 5.1 stored the Supabase key with a
+leading U+FEFF (BOM). The deployed function then crashed with `TypeError: Cannot convert argument to a
+ByteString (char 65279)` the moment the value was used as a fetch header — a 500 with an empty body and
+no local repro.
+
+**Pattern:** PS 5.1 encodes stdin to native executables with a BOM. Any secret/env value piped through
+PowerShell into a CLI (vercel, gh, wrangler…) can silently gain an invisible prefix that only explodes at
+runtime, in headers/URLs (ByteString conversion, invalid-URL). The value *looks* right everywhere.
+
+**How to apply:** On Windows, pipe values into CLIs from the **Bash tool** with `printf '%s' "$VAL"`
+(no BOM, no trailing newline) — never from PowerShell. And always smoke-test the deployed API route
+itself after wiring env vars; the homepage rendering proves nothing about function env health. Char
+65279 / U+FEFF in an error = BOM contamination, look at how the value was written.
