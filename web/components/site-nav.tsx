@@ -11,8 +11,21 @@ const LINKS = [
   { href: "#faq", label: "FAQ" },
 ];
 
-export function SiteNav() {
+export function SiteNav({
+  authOn = false,
+  loggedIn = false,
+}: {
+  authOn?: boolean;
+  loggedIn?: boolean;
+}) {
   const [open, setOpen] = useState(false);
+  // waitlist mode until the AniList client is registered; then the nav CTA
+  // becomes the real front door
+  const cta = loggedIn
+    ? { href: "/app", label: "Open app" }
+    : authOn
+      ? { href: "/api/auth/login", label: "Sign in with AniList" }
+      : { href: "#waitlist", label: "Get early access" };
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-4">
@@ -36,10 +49,10 @@ export function SiteNav() {
 
         <div className="flex items-center gap-1.5">
           <a
-            href="#waitlist"
+            href={cta.href}
             className="hidden rounded-full bg-paper px-4 py-2 text-sm font-semibold text-ink transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white active:scale-[0.98] sm:inline-block"
           >
-            Get early access
+            {cta.label}
           </a>
           <button
             type="button"
@@ -67,11 +80,11 @@ export function SiteNav() {
               </a>
             ))}
             <a
-              href="#waitlist"
+              href={cta.href}
               onClick={() => setOpen(false)}
               className="mt-1 rounded-full bg-paper px-4 py-3 text-center text-sm font-semibold text-ink"
             >
-              Get early access
+              {cta.label}
             </a>
           </div>
         </div>

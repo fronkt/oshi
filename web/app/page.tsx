@@ -8,20 +8,34 @@ import { HowItWorks } from "@/components/how-it-works";
 import { Faq } from "@/components/faq";
 import { FinalCta } from "@/components/final-cta";
 import { SiteFooter } from "@/components/site-footer";
+import { AuthNotice } from "@/components/auth-notice";
+import { authConfigured } from "@/lib/server/anilist";
+import { sessionUser } from "@/lib/server/session";
 
-export default function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ auth?: string }>;
+}) {
+  const { auth } = await searchParams;
+  // until the AniList client is registered (env unset), the site stays in
+  // pure waitlist mode — flipping env + redeploy turns the product on
+  const authOn = authConfigured();
+  const loggedIn = authOn ? Boolean(await sessionUser().catch(() => null)) : false;
+
   return (
     <>
-      <SiteNav />
+      <SiteNav authOn={authOn} loggedIn={loggedIn} />
+      {auth && <AuthNotice code={auth} />}
       <main>
-        <Hero />
+        <Hero authOn={authOn} loggedIn={loggedIn} />
         <SyncStrip />
         <AnimeShowcase />
         <FeaturesBento />
         <Compatibility />
         <HowItWorks />
         <Faq />
-        <FinalCta />
+        <FinalCta appLive={authOn} />
       </main>
       <SiteFooter />
     </>

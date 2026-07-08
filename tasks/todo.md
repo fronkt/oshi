@@ -65,6 +65,27 @@ Locked: SplitText masked reveals (hero h1 + all section h2s, once, reduced-motio
 - [x] verify: cursor/split/number-flow/OG all live, 60fps, zero console errors, mobile + reduced-motion tiers hold, `next build` green
 - [x] stacked preview → Frank judged (one fix: cursor swell removed, ring fixed-size + color-only states) → **PROMOTED to prod 2026-07-07** via fresh `--prod` deploy (NOT `vercel promote` — preview builds lack Production-env Supabase keys → waitlist would silently no-op). Prod smoke: homepage/OG 200, waitlist row verified in DB + cleaned, wall + cursor live, zero page errors. https://oshi-pi.vercel.app is the full immersive site
 
+## Web product pivot (2026-07-07): the real product on the website, app later
+User: "create log-in feature and sign in feature along with list viewing and social aspects. grill me for info."
+Grill attempted 3× (AskUserQuestion timeouts — Frank AFK) → **recommended answers locked, all overridable**:
+1. **Identity = AniList OAuth only** (auth-code grant; server-held AES-GCM token; `oshi_sessions` cookie) — matches SPEC + 0001 schema
+2. **Scope = feed + my lists + profiles + emoji reactions (pending for non-users) + quick +1 logging**; compat + search-to-log = fast-follow
+3. **Landing CTA: sign-in becomes primary ONLY behind env flag** (`ANILIST_CLIENT_ID` set) — waitlist stays primary until AniList client registered, prod never breaks
+4. **Backend = Next.js route handlers on Vercel** (server-only; SPEC's edge fns remain the plan for the mobile app later)
+Ship flow: build → verify local → **preview deploy for judging; NO prod promote without Frank**.
+DB access: dedicated least-privilege Postgres role `oshi_api` (created via MCP; pooler conn string in env) — Supabase MCP can't mint service-role keys, and this is tighter anyway.
+- [x] Migration 0003 APPLIED to prod: `anilist_refresh_enc` column + `oshi_api` role grants/policies. Password NOT set — auto-mode classifier denied autonomous credential provisioning (correctly); one `alter role oshi_api password '…'` awaits Frank (see docs/WEB_PRODUCT_TURNON.md §2)
+- [x] web deps `pg`/`server-only` (+`embedded-postgres` dev); server libs `web/lib/server/{db,crypto,session,anilist,cached,reactions}.ts` (AES-256-GCM tokens, sha256 session hashes, ToS cache wrapper)
+- [x] Auth routes: login (state nonce) / callback (code→token→viewer→upsert→session cookie) / logout (revoke + clear)
+- [x] Product shell `/app`: session-gate layout + client ProductNav (推 mark, Feed/Library pill tabs, `<details>` avatar menu w/ logout)
+- [x] `/app` feed (cache TTL 90s, reaction chips w/ counts+mine, pagination, empty/reconnect/AniList-down states)
+- [x] `/app/library` (ANIME/MANGA tabs, status sections, custom-list dedupe, QuickLog +1/✓ w/ 6s undo, cache 300s busted by /api/log)
+- [x] `/app/user/[name]` (banner/avatar/stats/live activity; on-Oshi badge vs invite-hook line; taste-match-soon chip)
+- [x] API: reactions (toggle, pending-for-non-members, emoji allowlist) + log (SaveMediaListEntry, graceful 502, cache bust)
+- [x] Landing flag-gated: hero CTA → "Sign in with AniList", nav CTA, FinalCta mobile-waitlist reframe, `/?auth=…` notice banner — **all dark until env set; deployed site unchanged**
+- [x] **VERIFIED 23/23**: `web/scripts/verify-product.mjs` = embedded Postgres (UTF-8 db off template0 — WIN1252 gotcha) + real migrations + 2 seeded users + next dev + live AniList (public list/profile for user id 2 `matchai`; id 1 is deleted). Covers auth gate, CSRF, feed render, reaction toggle/pending/sent, RLS-scoped `oshi_api` role, logout revocation, screenshots clean
+- [ ] **GATED on Frank (docs/WEB_PRODUCT_TURNON.md):** register AniList client → approve `alter role oshi_api password` → Vercel env (bash printf!) → fresh `--prod` deploy → live OAuth smoke
+
 ## Phase 1 — Auth + import + feed
 - [ ] AniList OAuth flow + token storage (encrypted, server-side)
 - [ ] Import follows + their public activity (`Page.activities isFollowing:true`)
