@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Check, CircleNotch } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/cn";
+import { burstFrom, springIn } from "./fx";
 
 type State = "idle" | "loading" | "done" | "error";
 
@@ -16,6 +17,15 @@ export function WaitlistForm({
   const [email, setEmail] = useState("");
   const [state, setState] = useState<State>("idle");
   const [message, setMessage] = useState("");
+  const doneRef = useRef<HTMLDivElement>(null);
+
+  // the conversion moment gets the celebration: spring + penlight burst
+  useEffect(() => {
+    if (state === "done" && doneRef.current) {
+      springIn(doneRef.current);
+      burstFrom(doneRef.current);
+    }
+  }, [state]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -48,8 +58,9 @@ export function WaitlistForm({
   if (state === "done") {
     return (
       <div
+        ref={doneRef}
         className={cn(
-          "flex items-center gap-3 rounded-full border border-accent/30 bg-accent/10 p-2 pr-5",
+          "relative flex items-center gap-3 rounded-full border border-accent/30 bg-accent/10 p-2 pr-5",
           className,
         )}
         role="status"

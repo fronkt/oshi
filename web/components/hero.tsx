@@ -2,6 +2,7 @@ import { ArrowDown, ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { WaitlistForm } from "./waitlist-form";
 import { Hero3D } from "./hero-3d";
 import { TextReveal } from "./text-reveal";
+import { Magnetic } from "./fx";
 
 export function Hero({
   authOn = false,
@@ -53,15 +54,17 @@ export function Hero({
           <div className="mt-8 max-w-md">
             {authOn ? (
               <div className="flex flex-wrap items-center gap-4">
-                <a
-                  href={loggedIn ? "/app" : "/api/auth/login"}
-                  className="group inline-flex items-center gap-2.5 rounded-full bg-accent py-3 pl-6 pr-2.5 text-[15px] font-semibold text-ink transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-accent-soft active:scale-[0.98]"
-                >
-                  {loggedIn ? "Open the app" : "Sign in with AniList"}
-                  <span className="grid size-8 place-items-center rounded-full bg-ink/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-px">
-                    <ArrowRight size={16} weight="bold" />
-                  </span>
-                </a>
+                <Magnetic>
+                  <a
+                    href={loggedIn ? "/app" : "/api/auth/login"}
+                    className="group inline-flex items-center gap-2.5 rounded-full bg-accent py-3 pl-6 pr-2.5 text-[15px] font-semibold text-ink transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-accent-soft active:scale-[0.98]"
+                  >
+                    {loggedIn ? "Open the app" : "Sign in with AniList"}
+                    <span className="grid size-8 place-items-center rounded-full bg-ink/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-px">
+                      <ArrowRight size={16} weight="bold" />
+                    </span>
+                  </a>
+                </Magnetic>
                 <a
                   href="#waitlist"
                   className="text-sm text-muted transition-colors hover:text-paper"

@@ -8,6 +8,7 @@ import {
 import { Reveal } from "./reveal";
 import { TextReveal } from "./text-reveal";
 import { SpotlightCard } from "./spotlight-card";
+import { PercentTicker, RecapBars } from "./fx";
 
 export function FeaturesBento() {
   return (
@@ -67,7 +68,8 @@ export function FeaturesBento() {
             </Icon>
             <div className="mt-6">
               <p className="font-display text-5xl font-bold tracking-tight text-paper">
-                92<span className="text-accent">%</span>
+                <PercentTicker value={92} />
+                <span className="text-accent">%</span>
               </p>
               <h3 className="mt-3 font-display text-lg font-semibold">
                 Taste-match score
@@ -109,15 +111,7 @@ export function FeaturesBento() {
               A shareable recap of what you watched and who you watched alongside,
               every Sunday.
             </p>
-            <div className="mt-5 flex h-16 items-end gap-1.5">
-              {[40, 64, 28, 80, 52, 70, 36].map((h, i) => (
-                <span
-                  key={i}
-                  style={{ height: `${h}%` }}
-                  className="flex-1 rounded-sm bg-linear-to-t from-accent/30 to-accent"
-                />
-              ))}
-            </div>
+            <RecapBars heights={[40, 64, 28, 80, 52, 70, 36]} />
           </SpotlightCard>
         </Reveal>
       </div>

@@ -180,6 +180,9 @@ await su.query(
 );
 
 /* ── 3. next dev server ────────────────────────────────────────────────── */
+// hard-killed dev servers (our own teardown) leave a corrupt Turbopack cache
+// that makes the next boot accept TCP but never answer — always start fresh
+try { rmSync(path.join(WEB, ".next"), { recursive: true, force: true }); } catch {}
 console.log("starting next dev…");
 const env = {
   ...process.env,

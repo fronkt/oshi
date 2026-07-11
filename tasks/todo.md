@@ -94,6 +94,16 @@ anime.js v4 (`animejs@4.5.0`) for the product layer (`/app`); GSAP keeps the lan
 - [x] Reaction chips: spring pop on react, palette springs in from the +, pending-note fade
 - [x] QuickLog: button pop + count roll + floating "+1" + elastic Completed pop
 - [x] `next build` green + verify-product.mjs 23/23 + screenshot judge
+- Correction (2026-07-11): Frank meant anime.js on the HOME PAGE. Grill re-attempted (timeout, AFK) -> locked: flourish pass ON TOP of the landing (keep R3F/GSAP core) + KEEP the /app pass. Both overridable.
+
+## Landing — anime.js flourish pass (2026-07-11)
+Additive only (Motion Reveals + GSAP choreography untouched); `web/components/fx.tsx`.
+- [x] Magnetic spring CTAs (`createAnimatable`): nav pill, hero sign-in (authOn), final-CTA sign-in — desktop fine-pointer only
+- [x] Waitlist success celebration: spring-in pill + 14-particle penlight burst (self-cleaning)
+- [x] Bento: recap bars spring up staggered on scroll-enter; taste-match 92% ticks up
+- [x] How-it-works: connector line draws itself (`svg.createDrawable`) on scroll-enter
+- [x] Verified 8/8 (`web/scripts/verify-landing-fx.mjs`: prod build + real Chrome, waitlist API stubbed, particle cleanup + zero page errors asserted) + screenshots
+
 - Gotcha hit: stale `.next` Turbopack dev cache wedged `next dev` (accepted TCP, never answered — probe loop hangs since fetch has no timeout). Fix: `rm -rf web/.next`. Also: never edit source files while verify-product.mjs is mid-run.
 
 ## Phase 1 — Auth + import + feed

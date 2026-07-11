@@ -146,3 +146,18 @@ killed dev runs). `rm -rf web/.next` → dev answered in 3 s.
 (`AbortSignal.timeout`) so a wedged server fails the loop instead of hanging it. And never edit
 source files while the verify suite is mid-run — HMR under test load confounds the diagnosis
 (the edits weren't the cause this time, but proving that cost two more probe rounds).
+
+## 2026-07-11 — "For oshi" ≠ "for the oshi product" — confirm WHICH surface before building
+
+**What happened:** Frank asked "can you use anime.js to make full animations for oshi?" I resolved
+the ambiguity myself (landing already rich with GSAP → product layer is motion-bare → build there),
+presented that plan, got a one-word "1", and shipped a full product-layer pass. He meant the home page.
+
+**Why it went wrong:** a one-word approval ("1") ratifies MY framing, not his intent. When I've
+silently resolved a surface/target ambiguity, the approval doesn't confirm the resolution — the user
+may pick an option without re-reading where it applies.
+
+**How to apply:** when a request names the project but not the surface (site vs product vs app), and
+I'm about to spend >30 min building, spend one question confirming the target — especially when my
+resolution CONTRADICTS the literal ask ("home page animations" → I built everywhere BUT the home
+page's sibling). Cheap question, expensive rework.

@@ -2,6 +2,7 @@ import { WaitlistForm } from "./waitlist-form";
 import { CtaGradient } from "./cta-gradient";
 import { TextReveal } from "./text-reveal";
 import { PenlightSparkles } from "./penlight-sparkles";
+import { Magnetic } from "./fx";
 
 export function FinalCta({ appLive = false }: { appLive?: boolean }) {
   return (
@@ -21,12 +22,14 @@ export function FinalCta({ appLive = false }: { appLive?: boolean }) {
               : "Oshi is rolling out now. Add your email and we will send your invite when a spot opens."}
           </p>
           {appLive && (
-            <a
-              href="/api/auth/login"
-              className="mt-7 inline-flex items-center rounded-full bg-accent px-6 py-3 text-[15px] font-semibold text-ink transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-accent-soft active:scale-[0.98]"
-            >
-              Sign in with AniList
-            </a>
+            <Magnetic className="mt-7 inline-block">
+              <a
+                href="/api/auth/login"
+                className="inline-flex items-center rounded-full bg-accent px-6 py-3 text-[15px] font-semibold text-ink transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-accent-soft active:scale-[0.98]"
+              >
+                Sign in with AniList
+              </a>
+            </Magnetic>
           )}
           <div className="mx-auto mt-8 max-w-md">
             <WaitlistForm source={appLive ? "mobile-waitlist" : "cta"} />

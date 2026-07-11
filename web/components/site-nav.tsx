@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { List, X } from "@phosphor-icons/react/dist/ssr";
 import { LiquidMark } from "./liquid-mark";
+import { Magnetic } from "./fx";
 
 const LINKS = [
   { href: "#features", label: "Features" },
@@ -48,12 +49,14 @@ export function SiteNav({
         </div>
 
         <div className="flex items-center gap-1.5">
-          <a
-            href={cta.href}
-            className="hidden rounded-full bg-paper px-4 py-2 text-sm font-semibold text-ink transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white active:scale-[0.98] sm:inline-block"
-          >
-            {cta.label}
-          </a>
+          <Magnetic className="hidden sm:inline-block" strength={0.25} radius={40}>
+            <a
+              href={cta.href}
+              className="inline-block rounded-full bg-paper px-4 py-2 text-sm font-semibold text-ink transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white active:scale-[0.98]"
+            >
+              {cta.label}
+            </a>
+          </Magnetic>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}

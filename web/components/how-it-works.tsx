@@ -1,6 +1,7 @@
 import { Plugs, DeviceMobileCamera, UsersThree } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./reveal";
 import { TextReveal } from "./text-reveal";
+import { StepConnector } from "./fx";
 
 const STEPS = [
   {
@@ -33,11 +34,8 @@ export function HowItWorks() {
       </div>
 
       <div className="relative mt-14 grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-8">
-        {/* connector line behind the icon row (desktop) */}
-        <div
-          className="absolute left-[16%] right-[16%] top-6 hidden h-px bg-white/10 md:block"
-          aria-hidden
-        />
+        {/* connector line behind the icon row (desktop) — draws itself in */}
+        <StepConnector />
         {STEPS.map((s, i) => (
           <Reveal key={s.title} delay={i * 0.08} className="relative">
             <span className="grid size-12 place-items-center rounded-full border border-white/12 bg-ink text-accent">
