@@ -20,7 +20,8 @@ import pg from "pg";
 
 const ROOT = path.resolve(import.meta.dirname, "..", "..");
 const WEB = path.resolve(import.meta.dirname, "..");
-const PG_PORT = 5542;
+// override when a dead postgres leaves a ghost LISTENING socket behind
+const PG_PORT = Number(process.env.DEMO_PG_PORT ?? 5542);
 const WEB_PORT = 3005;
 const HELPER_PORT = 3999;
 const BASE = `http://localhost:${WEB_PORT}`;
