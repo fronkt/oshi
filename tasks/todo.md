@@ -86,6 +86,16 @@ DB access: dedicated least-privilege Postgres role `oshi_api` (created via MCP; 
 - [x] **VERIFIED 23/23**: `web/scripts/verify-product.mjs` = embedded Postgres (UTF-8 db off template0 — WIN1252 gotcha) + real migrations + 2 seeded users + next dev + live AniList (public list/profile for user id 2 `matchai`; id 1 is deleted). Covers auth gate, CSRF, feed render, reaction toggle/pending/sent, RLS-scoped `oshi_api` role, logout revocation, screenshots clean
 - [ ] **GATED on Frank (docs/WEB_PRODUCT_TURNON.md):** register AniList client → approve `alter role oshi_api password` → Vercel env (bash printf!) → fresh `--prod` deploy → live OAuth smoke
 
+## Web product — anime.js animation pass (2026-07-11, Frank picked option 1)
+anime.js v4 (`animejs@4.5.0`) for the product layer (`/app`); GSAP keeps the landing. House rules: reduced-motion opt-out everywhere, entrance-hold CSS released on mount (+ noscript fallback), below-fold items appear instantly (300+ library entries never all animate).
+- [x] `components/product/animate.tsx`: `CardsIn` (stagger/ripple entrance, viewport-only), `StatNumber` (count-up), `springPop` shared tap feedback
+- [x] Feed + profile activity cards cascade in; profile stats count up + cascade
+- [x] Library ripples from the top-right tab switch (distance-based delay)
+- [x] Reaction chips: spring pop on react, palette springs in from the +, pending-note fade
+- [x] QuickLog: button pop + count roll + floating "+1" + elastic Completed pop
+- [x] `next build` green + verify-product.mjs 23/23 + screenshot judge
+- Gotcha hit: stale `.next` Turbopack dev cache wedged `next dev` (accepted TCP, never answered — probe loop hangs since fetch has no timeout). Fix: `rm -rf web/.next`. Also: never edit source files while verify-product.mjs is mid-run.
+
 ## Phase 1 — Auth + import + feed
 - [ ] AniList OAuth flow + token storage (encrypted, server-side)
 - [ ] Import follows + their public activity (`Page.activities isFollowing:true`)

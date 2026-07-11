@@ -130,3 +130,19 @@ the library; that's why the grill locked a backup scope up front.
 **How to apply:** for image-distortion effects on this site, build them in the existing R3F stack (drei
 `View` tracks DOM rects) rather than adding another WebGL wrapper. And always agree on a strip-back
 plan before building the risky item — it converts sunk-cost debugging into a one-commit subtraction.
+
+## 2026-07-11 — A wedged `next dev` that accepts TCP but never answers = stale `.next` cache
+
+**What happened:** the E2E verify suite hung for ~15 min at "starting next dev…". The dev server
+process was alive (1.4 GB RSS) and listening, TCP connected, but no request ever got a response —
+and the script's boot probe (`fetch` with no timeout) hung with it instead of failing fast.
+`next build` in the same tree was green, which made it look like anything but a cache problem.
+
+**Root cause:** stale Turbopack dev cache in `web/.next` (likely left inconsistent by previous
+killed dev runs). `rm -rf web/.next` → dev answered in 3 s.
+
+**How to apply:** when `next dev` listens but requests hang forever, delete `.next` FIRST — it's a
+10-second test that beats process archaeology. Give boot probes a per-request timeout
+(`AbortSignal.timeout`) so a wedged server fails the loop instead of hanging it. And never edit
+source files while the verify suite is mid-run — HMR under test load confounds the diagnosis
+(the edits weren't the cause this time, but proving that cost two more probe rounds).

@@ -1,9 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { animate, createSpring } from "animejs";
 import { Check, Plus } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/cn";
+import { prefersReducedMotion, springPop } from "./animate";
 
 /**
  * One-tap logging on a library entry (the signal wedge, web edition):
@@ -27,6 +29,48 @@ export function QuickLog({
   const [undoable, setUndoable] = useState(false);
   const [done, setDone] = useState(false);
   const undoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const countRef = useRef<HTMLSpanElement>(null);
+  const doneRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (done && doneRef.current && !prefersReducedMotion()) {
+      animate(doneRef.current, {
+        scale: [0.7, 1],
+        opacity: [0, 1],
+        ease: createSpring({ stiffness: 300, damping: 13 }),
+      });
+    }
+  }, [done]);
+
+  // the satisfying part: button pop, count roll, and a +1 floating away
+  function tick(btn: HTMLElement) {
+    if (prefersReducedMotion()) return;
+    springPop(btn, 1.15);
+    if (countRef.current) {
+      animate(countRef.current, {
+        translateY: [7, 0],
+        opacity: [0, 1],
+        duration: 300,
+        ease: "outQuad",
+      });
+    }
+    const row = rowRef.current;
+    if (!row) return;
+    const float = document.createElement("span");
+    float.textContent = "+1";
+    float.setAttribute("aria-hidden", "true");
+    float.className =
+      "pointer-events-none absolute -top-1.5 left-0 text-xs font-bold text-accent";
+    row.appendChild(float);
+    animate(float, {
+      translateY: [0, -16],
+      opacity: [1, 0],
+      duration: 650,
+      ease: "outQuad",
+      onComplete: () => float.remove(),
+    });
+  }
 
   async function log(body: Record<string, unknown>): Promise<boolean> {
     setBusy(true);
@@ -45,10 +89,11 @@ export function QuickLog({
     }
   }
 
-  async function bump() {
+  async function bump(btn: HTMLElement) {
     const next = current + 1;
     if (total && next > total) return complete();
     setCurrent(next); // optimistic
+    tick(btn);
     if (await log({ progress: next })) {
       setUndoable(true);
       if (undoTimer.current) clearTimeout(undoTimer.current);
@@ -83,15 +128,18 @@ export function QuickLog({
 
   if (done) {
     return (
-      <p className="inline-flex items-center gap-1.5 text-xs font-medium text-accent-soft">
+      <p
+        ref={doneRef}
+        className="inline-flex items-center gap-1.5 text-xs font-medium text-accent-soft"
+      >
         <Check size={13} weight="bold" /> Completed
       </p>
     );
   }
 
   return (
-    <div className="flex items-center gap-1.5">
-      <span className="text-xs tabular-nums text-faint">
+    <div ref={rowRef} className="relative flex items-center gap-1.5">
+      <span ref={countRef} className="text-xs tabular-nums text-faint">
         {current}
         {total ? ` / ${total}` : ""} {unit}
       </span>
@@ -106,7 +154,7 @@ export function QuickLog({
       ) : (
         <button
           type="button"
-          onClick={bump}
+          onClick={(e) => bump(e.currentTarget)}
           disabled={busy}
           aria-label={`Log ${unit === "ep" ? "next episode" : "next chapter"}`}
           className={cn(

@@ -5,6 +5,7 @@ import { followingActivity } from "@/lib/server/anilist";
 import { cached } from "@/lib/server/cached";
 import { reactionsFor } from "@/lib/server/reactions";
 import { ActivityCard } from "@/components/product/activity-card";
+import { CardsIn } from "@/components/product/animate";
 
 export const dynamic = "force-dynamic";
 
@@ -79,7 +80,7 @@ export default async function FeedPage({
           </a>
         </div>
       ) : (
-        <div className="mt-6 flex flex-col gap-3">
+        <CardsIn className="mt-6 flex flex-col gap-3">
           {feed.activities.map((a) => (
             <ActivityCard
               key={a.id}
@@ -87,7 +88,7 @@ export default async function FeedPage({
               reactions={reactions.get(a.id) ?? []}
             />
           ))}
-        </div>
+        </CardsIn>
       )}
 
       <div className="mt-8 flex items-center justify-between">

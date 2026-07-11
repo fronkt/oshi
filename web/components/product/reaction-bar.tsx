@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { animate, createSpring, stagger } from "animejs";
 import { cn } from "@/lib/cn";
 import { REACTION_EMOJI } from "@/lib/emoji";
+import { prefersReducedMotion, springPop } from "./animate";
 
 export type ReactionCount = { emoji: string; n: number; mine: boolean };
 
@@ -30,12 +32,46 @@ export function ReactionBar({
   );
   const [pendingNote, setPendingNote] = useState(false);
   const [open, setOpen] = useState(false);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const noteRef = useRef<HTMLParagraphElement>(null);
+  const countsRef = useRef(counts);
+  countsRef.current = counts;
 
-  async function toggle(emoji: string) {
+  // opening the palette: chips not already visible spring in from the +
+  useEffect(() => {
+    if (!open || prefersReducedMotion()) return;
+    const fresh = Array.from(
+      rowRef.current?.querySelectorAll<HTMLElement>("[data-chip]") ?? [],
+    ).filter((el) => {
+      const c = countsRef.current[el.dataset.chip ?? ""];
+      return c && c.n === 0;
+    });
+    if (!fresh.length) return;
+    animate(fresh, {
+      scale: [0.5, 1],
+      opacity: [0, 1],
+      delay: stagger(26, { from: "last" }),
+      ease: createSpring({ stiffness: 280, damping: 14 }),
+    });
+  }, [open]);
+
+  useEffect(() => {
+    if (pendingNote && noteRef.current && !prefersReducedMotion()) {
+      animate(noteRef.current, {
+        opacity: [0, 1],
+        translateY: [4, 0],
+        duration: 400,
+        ease: "outQuad",
+      });
+    }
+  }, [pendingNote]);
+
+  async function toggle(emoji: string, el: HTMLButtonElement) {
     const cur = counts[emoji];
     const next = cur.mine
       ? { n: Math.max(0, cur.n - 1), mine: false }
       : { n: cur.n + 1, mine: true };
+    if (!cur.mine) springPop(el);
     setCounts((c) => ({ ...c, [emoji]: next })); // optimistic
     try {
       const res = await fetch("/api/reactions", {
@@ -56,14 +92,15 @@ export function ReactionBar({
 
   return (
     <div className="mt-2.5">
-      <div className="flex flex-wrap items-center gap-1.5">
+      <div ref={rowRef} className="flex flex-wrap items-center gap-1.5">
         {shown.map((emoji) => {
           const c = counts[emoji];
           return (
             <button
               key={emoji}
               type="button"
-              onClick={() => toggle(emoji)}
+              data-chip={emoji}
+              onClick={(e) => toggle(emoji, e.currentTarget)}
               aria-pressed={c.mine}
               className={cn(
                 "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[13px] leading-none transition-colors duration-300",
@@ -87,7 +124,7 @@ export function ReactionBar({
         </button>
       </div>
       {pendingNote && (
-        <p className="mt-2 text-xs text-accent-soft">
+        <p ref={noteRef} className="mt-2 text-xs text-accent-soft">
           Saved — they are not on Oshi yet, so they will see it the moment they join.
         </p>
       )}

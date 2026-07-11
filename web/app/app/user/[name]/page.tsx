@@ -5,6 +5,7 @@ import { cached } from "@/lib/server/cached";
 import { db } from "@/lib/server/db";
 import { reactionsFor } from "@/lib/server/reactions";
 import { ActivityCard } from "@/components/product/activity-card";
+import { CardsIn, StatNumber } from "@/components/product/animate";
 
 export const dynamic = "force-dynamic";
 
@@ -113,7 +114,7 @@ export default async function ProfilePage({
       </div>
 
       {/* stats strip */}
-      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <CardsIn className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
           { label: "anime", value: s.anime.count },
           { label: "episodes", value: s.anime.episodesWatched },
@@ -122,15 +123,16 @@ export default async function ProfilePage({
         ].map((stat) => (
           <div
             key={stat.label}
+            data-anim
             className="rounded-[var(--radius-card)] border border-white/8 bg-elev/80 px-4 py-3"
           >
             <p className="font-display text-xl font-bold tabular-nums">
-              {stat.value.toLocaleString()}
+              <StatNumber value={stat.value} />
             </p>
             <p className="text-xs text-faint">{stat.label}</p>
           </div>
         ))}
-      </div>
+      </CardsIn>
 
       {/* recent activity */}
       <h2 className="mt-10 font-display text-lg font-semibold">Recent activity</h2>
@@ -141,7 +143,7 @@ export default async function ProfilePage({
       ) : activity.activities.length === 0 ? (
         <p className="mt-3 text-sm text-muted">Nothing public yet.</p>
       ) : (
-        <div className="mt-4 flex flex-col gap-3">
+        <CardsIn className="mt-4 flex flex-col gap-3">
           {activity.activities.map((a) => (
             <ActivityCard
               key={a.id}
@@ -149,7 +151,7 @@ export default async function ProfilePage({
               reactions={reactions.get(a.id) ?? []}
             />
           ))}
-        </div>
+        </CardsIn>
       )}
     </>
   );

@@ -50,6 +50,9 @@ All tree-shaken: zero bundle cost until a component actually imports them.
 
 **Motion / scroll / misc**
 - `gsap` (+ ScrollTrigger) and `motion` — already in use across the site
+- `animejs` (v4) — owns the **product layer** (`/app`): card cascades, spring
+  pops, count-ups via `components/product/animate.tsx` (CardsIn / StatNumber /
+  springPop). Grid staggers + springs are its home turf; GSAP keeps the landing.
 - `lenis` — buttery smooth-scroll, pairs with ScrollTrigger
 - `cobe` — the dotted WebGL globe (Stripe/Vercel style)
 

@@ -13,6 +13,10 @@ export default async function AppLayout({
 
   return (
     <div className="min-h-dvh">
+      {/* entrance animations hold cards at opacity 0 until JS mounts */}
+      <noscript>
+        <style>{`[data-cards="pending"] [data-anim]{opacity:1}`}</style>
+      </noscript>
       <ProductNav
         user={{ anilistName: user.anilistName, avatarUrl: user.avatarUrl }}
       />

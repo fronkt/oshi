@@ -20,7 +20,10 @@ export function ActivityCard({
   const title = displayTitle(a.media);
 
   return (
-    <article className="flex gap-4 rounded-[var(--radius-card)] border border-white/8 bg-elev/80 p-4 transition-colors duration-300 hover:border-white/15">
+    <article
+      data-anim
+      className="flex gap-4 rounded-[var(--radius-card)] border border-white/8 bg-elev/80 p-4 transition-colors duration-300 hover:border-white/15"
+    >
       <Link
         href={`/app/user/${encodeURIComponent(a.user.name)}`}
         className="shrink-0"

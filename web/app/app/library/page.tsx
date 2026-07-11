@@ -9,6 +9,7 @@ import {
 } from "@/lib/server/anilist";
 import { cached } from "@/lib/server/cached";
 import { QuickLog } from "@/components/product/quick-log";
+import { CardsIn } from "@/components/product/animate";
 import { cn } from "@/lib/cn";
 
 export const dynamic = "force-dynamic";
@@ -99,78 +100,81 @@ export default async function LibraryPage({
           </p>
         </div>
       ) : (
-        SECTION_ORDER.map(({ status, anime, manga }) => {
-          const entries = byStatus.get(status);
-          if (!entries?.length) return null;
-          const label = type === "ANIME" ? anime : manga;
-          const loggable = status === "CURRENT" || status === "REPEATING";
-          return (
-            <section key={status} className="mt-10">
-              <h2 className="flex items-baseline gap-2 font-display text-lg font-semibold">
-                {label}
-                <span className="text-sm font-normal text-faint">{entries.length}</span>
-              </h2>
-              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {entries.map((e) => (
-                  <article
-                    key={e.id}
-                    className="flex gap-3.5 rounded-[var(--radius-card)] border border-white/8 bg-elev/80 p-3 transition-colors duration-300 hover:border-white/15"
-                  >
-                    {e.media.coverImage.large && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={e.media.coverImage.large}
-                        alt={displayTitle(e.media)}
-                        width={56}
-                        height={80}
-                        loading="lazy"
-                        crossOrigin="anonymous"
-                        className="h-20 w-14 shrink-0 rounded-lg border border-white/10 object-cover"
-                      />
-                    )}
-                    <div className="min-w-0 flex-1 py-0.5">
-                      <a
-                        href={e.media.siteUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="line-clamp-1 text-[15px] font-semibold text-paper transition-colors hover:text-accent-soft"
-                      >
-                        {displayTitle(e.media)}
-                      </a>
-                      <p className="mt-0.5 text-xs text-faint">
-                        {e.media.format ?? ""}
-                        {e.score ? ` · your score ${e.score}` : ""}
-                      </p>
-                      <div className="mt-2">
-                        {loggable ? (
-                          <QuickLog
-                            mediaId={e.media.id}
-                            progress={e.progress}
-                            total={type === "ANIME" ? e.media.episodes : e.media.chapters}
-                            unit={type === "ANIME" ? "ep" : "ch"}
-                          />
-                        ) : (
-                          <span className="text-xs tabular-nums text-faint">
-                            {e.progress > 0 &&
-                              `${e.progress}${
-                                type === "ANIME"
-                                  ? e.media.episodes
-                                    ? ` / ${e.media.episodes}`
-                                    : ""
-                                  : e.media.chapters
-                                    ? ` / ${e.media.chapters}`
-                                    : ""
-                              } ${type === "ANIME" ? "ep" : "ch"}`}
-                          </span>
-                        )}
+        <CardsIn origin="top-right">
+          {SECTION_ORDER.map(({ status, anime, manga }) => {
+            const entries = byStatus.get(status);
+            if (!entries?.length) return null;
+            const label = type === "ANIME" ? anime : manga;
+            const loggable = status === "CURRENT" || status === "REPEATING";
+            return (
+              <section key={status} className="mt-10">
+                <h2 className="flex items-baseline gap-2 font-display text-lg font-semibold">
+                  {label}
+                  <span className="text-sm font-normal text-faint">{entries.length}</span>
+                </h2>
+                <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {entries.map((e) => (
+                    <article
+                      key={e.id}
+                      data-anim
+                      className="flex gap-3.5 rounded-[var(--radius-card)] border border-white/8 bg-elev/80 p-3 transition-colors duration-300 hover:border-white/15"
+                    >
+                      {e.media.coverImage.large && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={e.media.coverImage.large}
+                          alt={displayTitle(e.media)}
+                          width={56}
+                          height={80}
+                          loading="lazy"
+                          crossOrigin="anonymous"
+                          className="h-20 w-14 shrink-0 rounded-lg border border-white/10 object-cover"
+                        />
+                      )}
+                      <div className="min-w-0 flex-1 py-0.5">
+                        <a
+                          href={e.media.siteUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="line-clamp-1 text-[15px] font-semibold text-paper transition-colors hover:text-accent-soft"
+                        >
+                          {displayTitle(e.media)}
+                        </a>
+                        <p className="mt-0.5 text-xs text-faint">
+                          {e.media.format ?? ""}
+                          {e.score ? ` · your score ${e.score}` : ""}
+                        </p>
+                        <div className="mt-2">
+                          {loggable ? (
+                            <QuickLog
+                              mediaId={e.media.id}
+                              progress={e.progress}
+                              total={type === "ANIME" ? e.media.episodes : e.media.chapters}
+                              unit={type === "ANIME" ? "ep" : "ch"}
+                            />
+                          ) : (
+                            <span className="text-xs tabular-nums text-faint">
+                              {e.progress > 0 &&
+                                `${e.progress}${
+                                  type === "ANIME"
+                                    ? e.media.episodes
+                                      ? ` / ${e.media.episodes}`
+                                      : ""
+                                    : e.media.chapters
+                                      ? ` / ${e.media.chapters}`
+                                      : ""
+                                } ${type === "ANIME" ? "ep" : "ch"}`}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </section>
-          );
-        })
+                    </article>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </CardsIn>
       )}
     </>
   );

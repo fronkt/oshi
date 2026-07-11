@@ -201,7 +201,12 @@ dev.stderr.on("data", () => {});
 let up = false;
 for (let i = 0; i < 60 && !up; i++) {
   await new Promise((r) => setTimeout(r, 1000));
-  up = await fetch(BASE, { redirect: "manual" }).then((r) => r.status < 500, () => false);
+  // per-request timeout: a wedged dev server (stale .next cache) accepts TCP
+  // but never answers — without this the probe hangs forever instead of failing
+  up = await fetch(BASE, {
+    redirect: "manual",
+    signal: AbortSignal.timeout(3000),
+  }).then((r) => r.status < 500, () => false);
 }
 if (!up) {
   console.log("dev server never came up");
@@ -359,13 +364,17 @@ try {
   const page = await ctx.newPage();
   const pageErrors = [];
   page.on("pageerror", (e) => pageErrors.push(String(e).slice(0, 200)));
+  // 1.4s settle: the anime.js entrance cascade must be done, not mid-fade
   await page.goto(`${BASE}/app`, { waitUntil: "networkidle" });
+  await page.waitForTimeout(1400);
   await page.screenshot({ path: `${SCRATCH}/prod-feed.png` });
   await ctx.clearCookies();
   await ctx.addCookies([{ name: "oshi_session", value: B_TOKEN, url: BASE }]);
   await page.goto(`${BASE}/app/library`, { waitUntil: "networkidle" });
+  await page.waitForTimeout(1400);
   await page.screenshot({ path: `${SCRATCH}/prod-library.png`, fullPage: true });
   await page.goto(`${BASE}/app/user/matchai`, { waitUntil: "networkidle" });
+  await page.waitForTimeout(1400);
   await page.screenshot({ path: `${SCRATCH}/prod-profile.png`, fullPage: true });
   await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
   await page.waitForTimeout(2000);

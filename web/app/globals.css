@@ -239,3 +239,14 @@ body {
     display: none;
   }
 }
+
+/* ── product entrance hold: anime.js cascade releases this on mount
+      (components/product/animate.tsx); noscript + reduced-motion opt out ── */
+[data-cards="pending"] [data-anim] {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-cards="pending"] [data-anim] {
+    opacity: 1;
+  }
+}
