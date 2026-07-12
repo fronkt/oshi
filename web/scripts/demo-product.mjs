@@ -9,7 +9,7 @@
 //               /api/log writes are stubbed -> +1 animates then rolls back)
 //   matchai   — real AniList user id 2: LIVE public library (258 entries) +
 //               profile count-up stats; feed shows the reconnect card
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import http from "node:http";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -323,7 +323,7 @@ console.log(`\nREADY -> open  http://localhost:${HELPER_PORT}\n(Ctrl+C stops eve
 async function shutdown() {
   console.log("\nshutting down…");
   helper.close();
-  try { spawn("taskkill", ["/pid", String(dev.pid), "/T", "/F"], { shell: true }); } catch {}
+  try { spawnSync("taskkill", ["/pid", String(dev.pid), "/T", "/F"], { shell: true }); } catch {}
   try { await su.end(); } catch {}
   try { await epg.stop(); } catch {}
   await new Promise((r) => setTimeout(r, 1500));

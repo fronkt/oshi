@@ -4,7 +4,7 @@
 // bursts (API stubbed), magnetic CTA pulls. Zero page errors allowed.
 //
 //   npm run build && node scripts/verify-landing-fx.mjs
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import path from "node:path";
 import { chromium } from "playwright-core";
 
@@ -156,7 +156,7 @@ try {
 } finally {
   await browser.close();
   try {
-    spawn("taskkill", ["/pid", String(srv.pid), "/T", "/F"], { shell: true });
+    spawnSync("taskkill", ["/pid", String(srv.pid), "/T", "/F"], { shell: true });
   } catch {}
 }
 

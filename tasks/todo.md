@@ -103,6 +103,7 @@ Additive only (Motion Reveals + GSAP choreography untouched); `web/components/fx
 - [x] Bento: recap bars spring up staggered on scroll-enter; taste-match 92% ticks up
 - [x] How-it-works: connector line draws itself (`svg.createDrawable`) on scroll-enter
 - [x] Verified 8/8 (`web/scripts/verify-landing-fx.mjs`: prod build + real Chrome, waitlist API stubbed, particle cleanup + zero page errors asserted) + screenshots
+- [x] **Hero resilience (Frank's runtime error 2026-07-11):** per-cover `CoverSafe` boundary (1 bad texture = 1 dropped poster) + `SceneBoundary` -> CSS-wall fallback; root-caused the masking bug (fire-and-forget `spawn(taskkill)` before `process.exit` leaked stale servers serving deleted chunks -> now `spawnSync` everywhere); verified 7/7 (`verify-hero-resilience.mjs`: 1 cover blocked / whole CDN blocked)
 
 - Gotcha hit: stale `.next` Turbopack dev cache wedged `next dev` (accepted TCP, never answered — probe loop hangs since fetch has no timeout). Fix: `rm -rf web/.next`. Also: never edit source files while verify-product.mjs is mid-run.
 

@@ -1,6 +1,7 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef } from "react";
+import { Component, Suspense, useEffect, useMemo, useRef } from "react";
+import type { ReactNode } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Image as Cover, useProgress } from "@react-three/drei";
@@ -322,38 +323,57 @@ function Wall({
               .map((slot, i) => ({ slot, i }))
               .filter(({ slot }) => slot.layer === l)
               .map(({ slot, i }) => (
-                <Cover
-                  key={i}
-                  ref={slot.ref as React.RefObject<never>}
-                  url={slot.anime.cover}
-                  scale={[W, H]}
-                  radius={0.11}
-                  transparent
-                  toneMapped={false}
-                  color={LAYER_TINT[slot.layer]}
-                  opacity={0}
-                  position={[slot.baseX, slot.baseY, 0]}
-                  onPointerOver={(e) => {
-                    e.stopPropagation();
-                    state.current.hovered = i;
-                    document.body.style.cursor = "pointer";
-                  }}
-                  onPointerOut={() => {
-                    state.current.hovered = -1;
-                    document.body.style.cursor = "";
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (state.current.dragDist > 8) return; // that was a drag
-                    setFocus(i);
-                  }}
-                />
+                <CoverSafe key={i}>
+                  <Cover
+                    ref={slot.ref as React.RefObject<never>}
+                    url={slot.anime.cover}
+                    scale={[W, H]}
+                    radius={0.11}
+                    transparent
+                    toneMapped={false}
+                    color={LAYER_TINT[slot.layer]}
+                    opacity={0}
+                    position={[slot.baseX, slot.baseY, 0]}
+                    onPointerOver={(e) => {
+                      e.stopPropagation();
+                      state.current.hovered = i;
+                      document.body.style.cursor = "pointer";
+                    }}
+                    onPointerOut={() => {
+                      state.current.hovered = -1;
+                      document.body.style.cursor = "";
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (state.current.dragDist > 8) return; // that was a drag
+                      setFocus(i);
+                    }}
+                  />
+                </CoverSafe>
               ))}
           </group>
         ))}
       </group>
     </group>
   );
+}
+
+/**
+ * One failed cover texture (CDN hiccup, poisoned cache) drops that single
+ * poster — it must never take down the wall. The frame loop already skips
+ * null refs, so a missing plane costs nothing.
+ */
+class CoverSafe extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch(e: Error) {
+    console.warn("[hero3d] cover dropped:", e?.message ?? e);
+  }
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
 }
 
 /** Reports texture-loading progress up so the CSS wall can cross-fade out. */

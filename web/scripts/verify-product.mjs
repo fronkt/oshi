@@ -9,7 +9,7 @@
 //                    row -> exercises feed rendering, reactions, graceful /api/log
 //   B "matchai"    — real public AniList id 2, NO token -> exercises the
 //                    reconnect card, live public library + profile fetches
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -389,7 +389,7 @@ try {
   dev.kill("SIGTERM");
   try {
     // kill the whole tree on windows (npx spawns a child)
-    spawn("taskkill", ["/pid", String(dev.pid), "/T", "/F"], { shell: true });
+    spawnSync("taskkill", ["/pid", String(dev.pid), "/T", "/F"], { shell: true });
   } catch {}
   await su.end();
   try {

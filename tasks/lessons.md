@@ -161,3 +161,25 @@ may pick an option without re-reading where it applies.
 I'm about to spend >30 min building, spend one question confirming the target — especially when my
 resolution CONTRADICTS the literal ask ("home page animations" → I built everywhere BUT the home
 page's sibling). Cheap question, expensive rework.
+
+## 2026-07-11 — `spawn("taskkill")` + `process.exit` = the kill never runs; and 60-texture suspense needs boundaries
+
+**What happened:** Frank hit "Could not load <AniList cover>: undefined" crashing the 3D hero. Two
+separate defects surfaced while fixing it: (1) the hero had NO error boundary — any one of ~60 drei
+Image textures failing killed the whole scene; (2) every verify script's teardown did
+`spawn("taskkill", ...)` immediately followed by `process.exit()` — the parent died before taskkill
+ran, so stale `next start`/`next dev` servers accumulated silently. A stale server serves its
+in-memory manifest pointing at chunk files the next rebuild deleted → 500s on /_next/static chunks →
+"scene never mounts" symptoms that masqueraded as the texture bug. This is also the likely true
+source of the earlier "corrupt .next" wedges and the ghost socket.
+
+**Fixes:** `spawnSync` for teardown kills (all scripts); per-cover `CoverSafe` error boundary (one
+bad texture = one dropped poster, frame loop already skips null refs) + `SceneBoundary` in hero-3d
+(whole-scene failure → CSS wall tier). Verified by `verify-hero-resilience.mjs` (block 1 cover /
+block whole CDN).
+
+**How to apply:** cleanup code after `process.exit` (or fire-and-forget spawns in `finally`) does
+not exist — use sync calls. When N remote resources feed one Suspense tree, ask "what happens when
+exactly one fails?" — third-party CDNs guarantee it eventually. And React 19 reports
+boundary-RECOVERED errors via reportError (CDP pageerror) — filter known-recoverable messages in
+tests instead of chasing zero.

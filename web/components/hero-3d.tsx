@@ -1,12 +1,31 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Component, useCallback, useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { X } from "@phosphor-icons/react/dist/ssr";
 import { AnimeWall } from "./anime-wall";
 import type { AnimeCover } from "@/lib/anime";
 
 const Scene = dynamic(() => import("./hero-3d-scene"), { ssr: false });
+
+/** If the whole 3D scene dies at runtime, fall back to the CSS wall tier. */
+class SceneBoundary extends Component<
+  { onFail: () => void; children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch(e: Error) {
+    console.warn("[hero3d] scene failed, using CSS wall:", e?.message ?? e);
+    this.props.onFail();
+  }
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
 
 /**
  * Tier gate + DOM chrome for the 3D hero wall.
@@ -46,6 +65,10 @@ export function Hero3D() {
 
   const onFocus = useCallback((a: AnimeCover | null) => setFocused(a), []);
   const onReady = useCallback(() => setReady(true), []);
+  const onSceneFail = useCallback(() => {
+    setFocused(null);
+    setTier("css");
+  }, []);
 
   if (tier === "css" || tier === "pending") {
     return (
@@ -68,12 +91,14 @@ export function Hero3D() {
       <div
         className={`absolute inset-0 opacity-60 transition-opacity duration-1000 lg:opacity-100 ${ready ? "" : "!opacity-0"}`}
       >
-        <Scene
-          coarse={coarse}
-          onFocus={onFocus}
-          onReady={onReady}
-          dismissRef={dismissRef}
-        />
+        <SceneBoundary onFail={onSceneFail}>
+          <Scene
+            coarse={coarse}
+            onFocus={onFocus}
+            onReady={onReady}
+            dismissRef={dismissRef}
+          />
+        </SceneBoundary>
       </div>
 
       {/* focus caption card */}
